@@ -74,3 +74,7 @@ diskusi, jumlah interaksi dalam diskusi, dan jumlah upvote dalam forum diskusi b
 *Modul `Autentikasi` akan dikerjakan secara bersama oleh **Seluruh anggota F04***
 
 Sistem autentikasi utama aplikasi `README` untuk register, login, dan logout.
+
+### Berita Acara
+
+[https://docs.google.com/spreadsheets/d/17FP0NJsBjl3GNLE40fH_KiROTmdIbfxEupEhamdSloI/edit?usp=sharing](https://docs.google.com/spreadsheets/d/17FP0NJsBjl3GNLE40fH_KiROTmdIbfxEupEhamdSloI/edit?usp=sharing)
