@@ -75,6 +75,49 @@ diskusi, jumlah interaksi dalam diskusi, dan jumlah upvote dalam forum diskusi b
 
 Sistem autentikasi utama aplikasi `README` untuk register, login, dan logout.
 
-### Berita Acara
 
+## Role atau peran pengguna
+
+### Guest
+
+Role Guest adalah pengguna yang belum melakukan login saat masuk aplikasi. Guest hanya dapat mengakses module:
+
+1. Katalog Buku, tapi tidak bisa melihat detail buku, hanya judulnya saja.
+2. Authentikasi (Register)
+
+### User
+
+Role User adalah pengguna utama di aplikasi ini, user dapat mengakses module:
+
+1. Profil
+2. Pinjam Buku
+3. Review Buku
+4. Katalog Buku
+5. Forum Diskusi Buku
+6. Putar Lagu
+7. Autentikasi
+
+
+
+
+
+### Alur pengintegrasian dengan web service untuk terhubung dengan aplikasi web yang sudah dibuat saat Proyek Tengah Semester
+
+
+
+
+
+### Berita Acara
 [https://docs.google.com/spreadsheets/d/17FP0NJsBjl3GNLE40fH_KiROTmdIbfxEupEhamdSloI/edit?usp=sharing](https://docs.google.com/spreadsheets/d/17FP0NJsBjl3GNLE40fH_KiROTmdIbfxEupEhamdSloI/edit?usp=sharing)
+
+
+
+
+
+
+
+
+
+
+
+
