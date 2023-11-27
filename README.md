@@ -93,17 +93,30 @@ Role User adalah pengguna utama di aplikasi ini, user dapat mengakses module:
 3. Review Buku
 4. Katalog Buku
 5. Forum Diskusi Buku
-6. Putar Lagu
-7. Autentikasi
-
-
-
+6. Autentikasi
 
 
 ### Alur pengintegrasian dengan web service untuk terhubung dengan aplikasi web yang sudah dibuat saat Proyek Tengah Semester
 
+web service url = [https://readme-app.fly.dev/](https://readme-app.fly.dev/)
 
+1. Profil : terintegrasi dengan module `UserProfile`
+2. Pinjam Buku : terintegrasi dengan module `pinjambuku`
+3. Review Buku : terintegrasi dengan module `ReviewBuku`
+4. Katalog Buku : terintegrasi dengan module `KatalogBuku`
+5. Forum diskusi buku : terintegrasi dengan module `ForumDiskusi`
+6. Autentikasi : terintegrasi dengan module `authentication`
 
+**Alur Pengintegrasian**
+
+- Melakukan `http request` ke endpoint, dengan method:
+  - `GET`
+  - `POST`
+    Request Body : `Form / JSON`
+  
+- Request diproses di web service django sesuai dengan algoritma dan model yang sudah dibuat
+  
+- web service django memberikan response, seluruh response dalam bentuk `JSON`
 
 
 ### Berita Acara
