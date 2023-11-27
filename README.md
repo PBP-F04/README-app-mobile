@@ -66,8 +66,7 @@ banyak diskusi buku.
 Modul Forum Diskusi Buku adalah wadah komunitas dimana pengguna dapat berpartisipasi dalam percakapan tentang buku.
 Pengguna dapat membuat topik diskusi tentang buku tertentu, berbagi pendapat mereka, bertanya pertanyaan, dan
 berinteraksi dengan pengguna lain yang memiliki minat serupa. Modul ini mempromosikan dialog dan pertukaran ide antara
-pengguna yang gemar membaca. Modul ini juga memungkinan pengguna untuk mem-filter diskusi yang ada berdasarkan judul
-diskusi, jumlah interaksi dalam diskusi, dan jumlah upvote dalam forum diskusi buku tertentu.
+pengguna yang gemar membaca. 
 
 ### 6. Autentikasi
 
