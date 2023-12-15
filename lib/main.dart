@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:readme_mobile/authentication/pages/login.dart';
 import 'package:readme_mobile/authentication/pages/register.dart';
 
 void main() async {
@@ -17,11 +18,15 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       navigatorKey: navigatorKey,
       title: 'Flutter Demo',
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const LoginPage(),
+        '/register': (context) => const RegisterPage(),
+      },
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
         useMaterial3: true,
       ),
-      home: const RegisterPage(),
     );
   }
 }

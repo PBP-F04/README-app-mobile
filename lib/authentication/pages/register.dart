@@ -49,11 +49,10 @@ class _RegisterPageState extends State<RegisterPage> {
                     child: Padding(
                       padding: const EdgeInsets.all(8),
                       child: IconButton(
-                        icon: const Icon(Icons.arrow_back_ios_new, size: 20),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
+                          icon: const Icon(Icons.arrow_back_ios_new, size: 20),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          }),
                     ),
                   ),
                   const Padding(
@@ -62,7 +61,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       'Register',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontSize: 30,
+                        fontSize: 32,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -75,7 +74,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     child: Column(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.all(8),
+                          padding: const EdgeInsets.all(10),
                           child: TextFormField(
                             style: TextStyle(
                               color: Theme.of(context).colorScheme.onBackground,
