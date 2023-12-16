@@ -18,4 +18,14 @@ class DioClient {
     }
     return _dio!;
   }
+
+  static Future<List<Cookie>> getCookies() async {
+    var cookieJar = _dio!.interceptors
+        .where((element) => element is CookieManager)
+        .map((e) => (e as CookieManager).cookieJar)
+        .first as PersistCookieJar;
+
+    return cookieJar.loadForRequest(
+        Uri.parse("https://readme-app-production.up.railway.app"));
+  }
 }

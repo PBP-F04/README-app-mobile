@@ -244,7 +244,33 @@ class _LoginPageState extends State<LoginPage> {
                                                     });
                                                     if (response.statusCode ==
                                                         200) {
-                                                      print(response.data);
+                                                      _scaffoldKey.currentState!
+                                                          .showSnackBar(
+                                                              SnackBar(
+                                                        content: const Text(
+                                                          'Welcome, you are logged in',
+                                                        ),
+                                                        duration:
+                                                            const Duration(
+                                                                seconds: 2),
+                                                        backgroundColor:
+                                                            Colors.indigo,
+                                                        behavior:
+                                                            SnackBarBehavior
+                                                                .floating,
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(20),
+                                                        ),
+                                                      ));
+                                                      Future.delayed(
+                                                          const Duration(
+                                                              seconds: 2), () {
+                                                        Navigator.pushNamed(
+                                                            context, '/');
+                                                      });
                                                     }
                                                   } on DioException catch (e) {
                                                     if (e.response!
