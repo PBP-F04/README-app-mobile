@@ -25,7 +25,6 @@ class MyApp extends StatelessWidget {
         '/': (context) => const LoginPage(),
         '/register': (context) => const RegisterPage(),
         '/discussion-forum' : (context) => const DiscussionForumPage(),
-        // '/discussion-comment' : (context) => const CommentPage(),
       },
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
