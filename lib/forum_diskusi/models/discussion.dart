@@ -1,25 +1,25 @@
 // To parse this JSON data, do
 //
-//     final comment = commentFromJson(jsonString);
+//     final discussion = discussionFromJson(jsonString);
 
 import 'dart:convert';
 
-List<Comment> commentFromJson(String str) => List<Comment>.from(json.decode(str).map((x) => Comment.fromJson(x)));
+List<Discussion> discussionFromJson(String str) => List<Discussion>.from(json.decode(str).map((x) => Discussion.fromJson(x)));
 
-String commentToJson(List<Comment> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String discussionToJson(List<Discussion> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-class Comment {
+class Discussion {
   String model;
   String pk;
   Fields fields;
 
-  Comment({
+  Discussion({
     required this.model,
     required this.pk,
     required this.fields,
   });
 
-  factory Comment.fromJson(Map<String, dynamic> json) => Comment(
+  factory Discussion.fromJson(Map<String, dynamic> json) => Discussion(
     model: json["model"],
     pk: json["pk"],
     fields: Fields.fromJson(json["fields"]),
@@ -33,7 +33,7 @@ class Comment {
 }
 
 class Fields {
-  String discussion;
+  String book;
   String user;
   String title;
   String content;
@@ -42,7 +42,7 @@ class Fields {
   DateTime editedAt;
 
   Fields({
-    required this.discussion,
+    required this.book,
     required this.user,
     required this.title,
     required this.content,
@@ -52,7 +52,7 @@ class Fields {
   });
 
   factory Fields.fromJson(Map<String, dynamic> json) => Fields(
-    discussion: json["discussion"],
+    book: json["book"],
     user: json["user"],
     title: json["title"],
     content: json["content"],
@@ -62,7 +62,7 @@ class Fields {
   );
 
   Map<String, dynamic> toJson() => {
-    "discussion": discussion,
+    "book": book,
     "user": user,
     "title": title,
     "content": content,
