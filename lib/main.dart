@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:readme_mobile/authentication/pages/login.dart';
 import 'package:readme_mobile/authentication/pages/register.dart';
+import 'package:readme_mobile/forum_diskusi/pages/discussion_comment.dart';
+import 'package:readme_mobile/forum_diskusi/pages/discussion_forum.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,11 +19,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       navigatorKey: navigatorKey,
-      title: 'Flutter Demo',
+      title: 'README',
       initialRoute: '/',
       routes: {
         '/': (context) => const LoginPage(),
         '/register': (context) => const RegisterPage(),
+        '/discussion-forum' : (context) => const DiscussionForumPage(),
+        '/discussion-comment' : (context) => const CommentPage(),
       },
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),

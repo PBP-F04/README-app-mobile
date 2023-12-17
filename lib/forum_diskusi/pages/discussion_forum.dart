@@ -75,19 +75,19 @@ class _DiscussionForumPageState extends State<DiscussionForumPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "${index + 1}.${snapshot.data![index].fields.name}",
+                              "${index + 1}.${snapshot.data![index].fields.title}",
                               style: const TextStyle(
                                 fontSize: 18.0,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             const SizedBox(height: 10),
-                            Text("${snapshot.data![index].fields.amount}"),
-                            const SizedBox(height: 10),
+                            // Text("${snapshot.data![index].fields.amount}"),
+                            // const SizedBox(height: 10),
                             Text(
-                                "${snapshot.data![index].fields.description}"),
+                                "${snapshot.data![index].fields.content}"),
                             const SizedBox(height: 10),
-                            Text("${snapshot.data![index].fields.price}"),
+                            // Text("${snapshot.data![index].fields.price}"),
                             // ElevatedButton(
                             //   onPressed: () {
                             //     Navigator.push(
