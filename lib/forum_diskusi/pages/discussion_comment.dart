@@ -11,9 +11,9 @@ import '../models/comments.dart';
 // import 'detail_item.dart';
 
 class CommentPage extends StatefulWidget {
-  // final Discussion discussion;
+  final Discussion discussion;
 
-  const CommentPage({Key? key}) : super(key: key);
+  const CommentPage({Key? key, required this.discussion}) : super(key: key); // tes
 
   @override
   _CommentPageState createState() => _CommentPageState();
@@ -24,7 +24,7 @@ class _CommentPageState extends State<CommentPage> {
     // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
     //"https://shanahan-danualif-tugas.pbp.cs.ui.ac.id/json/"
     var url = Uri.parse(
-        'http://127.0.0.1:8000/discussions/json-comments/');
+        'http://127.0.0.1:8000/discussions/json-comments/'); // belom filter
     var response = await http.get(
       url,
       headers: {"Content-Type": "application/json"},
@@ -38,8 +38,9 @@ class _CommentPageState extends State<CommentPage> {
     for (var d in data) {
       if (d != null) {
         // list_comment.add(Comment(model: model, pk: pk, fields: fields).fromJson(d));
+        list_comment.add(Comment.fromJson(d));
       }
-      list_comment.add(Comment.fromJson(d));
+      
     }
     return list_comment;
   }
@@ -80,19 +81,19 @@ class _CommentPageState extends State<CommentPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "${index + 1}.${snapshot.data![index].fields.name}",
+                              "${index + 1}.${snapshot.data![index].fields.title}",
                               style: const TextStyle(
                                 fontSize: 18.0,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             const SizedBox(height: 10),
-                            Text("${snapshot.data![index].fields.amount}"),
-                            const SizedBox(height: 10),
+                            // Text("${snapshot.data![index].fields.amount}"),
+                            // const SizedBox(height: 10),
                             Text(
-                                "${snapshot.data![index].fields.description}"),
+                                "${snapshot.data![index].fields.content}"),
                             const SizedBox(height: 10),
-                            Text("${snapshot.data![index].fields.price}"),
+                            // Text("${snapshot.data![index].fields.price}"),
                             // ElevatedButton(
                             //   onPressed: () {
                             //     Navigator.push(
