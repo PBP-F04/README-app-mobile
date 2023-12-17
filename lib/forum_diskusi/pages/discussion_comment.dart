@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:readme_mobile/forum_diskusi/models/discussion.dart';
 import 'dart:convert';
 
 // import 'package:hanshop/models/item.dart';
@@ -10,6 +11,8 @@ import '../models/comments.dart';
 // import 'detail_item.dart';
 
 class CommentPage extends StatefulWidget {
+  // final Discussion discussion;
+
   const CommentPage({Key? key}) : super(key: key);
 
   @override
