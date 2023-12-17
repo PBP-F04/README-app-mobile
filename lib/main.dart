@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:readme_mobile/authentication/pages/login.dart';
 import 'package:readme_mobile/authentication/pages/register.dart';
-import 'package:readme_mobile/forum_diskusi/pages/discussion_comment.dart';
-import 'package:readme_mobile/forum_diskusi/pages/discussion_forum.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,11 +18,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       navigatorKey: navigatorKey,
       title: 'README',
-      initialRoute: '/discussion-forum',
+      initialRoute: '/',
       routes: {
         '/': (context) => const LoginPage(),
         '/register': (context) => const RegisterPage(),
-        '/discussion-forum' : (context) => const DiscussionForumPage(),
       },
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
