@@ -67,7 +67,9 @@ class _HomePageState extends State<HomePage> {
           _maxPage = _bookList!.pagination.totalPage;
           _page++;
         });
-      } on DioException catch (e) {}
+      } on DioException catch (e) {
+        if (e.response?.statusCode == 401) {}
+      }
     }
   }
 
