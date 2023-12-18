@@ -35,6 +35,7 @@ class Comment {
 class Fields {
   String discussion;
   String user;
+  String username;
   String title;
   String content;
   int upvotes;
@@ -44,6 +45,7 @@ class Fields {
   Fields({
     required this.discussion,
     required this.user,
+    required this.username,
     required this.title,
     required this.content,
     required this.upvotes,
@@ -54,6 +56,7 @@ class Fields {
   factory Fields.fromJson(Map<String, dynamic> json) => Fields(
     discussion: json["discussion"],
     user: json["user"],
+    username: json["username"],
     title: json["title"],
     content: json["content"],
     upvotes: json["upvotes"],
@@ -64,6 +67,7 @@ class Fields {
   Map<String, dynamic> toJson() => {
     "discussion": discussion,
     "user": user,
+    "username": username,
     "title": title,
     "content": content,
     "upvotes": upvotes,

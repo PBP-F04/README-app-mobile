@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:readme_mobile/forum_diskusi/models/discussion.dart';
+import 'package:readme_mobile/forum_diskusi/pages/create_comment.dart';
 import 'dart:convert';
 
 // import 'package:hanshop/models/item.dart';
@@ -24,7 +25,7 @@ class _CommentPageState extends State<CommentPage> {
     // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
     //"https://shanahan-danualif-tugas.pbp.cs.ui.ac.id/json/"
     var url = Uri.parse(
-        'http://127.0.0.1:8000/discussions/json-comments/'); // belom filter
+        'http://127.0.0.1:8000/discussions/json-comments/${widget.discussion.pk}');
     var response = await http.get(
       url,
       headers: {"Content-Type": "application/json"},
@@ -40,7 +41,7 @@ class _CommentPageState extends State<CommentPage> {
         // list_comment.add(Comment(model: model, pk: pk, fields: fields).fromJson(d));
         list_comment.add(Comment.fromJson(d));
       }
-      
+
     }
     return list_comment;
   }
@@ -70,44 +71,46 @@ class _CommentPageState extends State<CommentPage> {
                     ],
                   );
                 } else {
-                  return ListView.builder(
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (_, index) => Container(
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 12),
-                        padding: const EdgeInsets.all(20.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "${index + 1}.${snapshot.data![index].fields.title}",
-                              style: const TextStyle(
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.bold,
-                              ),
+                  return Column(
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CommentFormPage(discussion: widget.discussion),
                             ),
-                            const SizedBox(height: 10),
-                            // Text("${snapshot.data![index].fields.amount}"),
-                            // const SizedBox(height: 10),
-                            Text(
-                                "${snapshot.data![index].fields.content}"),
-                            const SizedBox(height: 10),
-                            // Text("${snapshot.data![index].fields.price}"),
-                            // ElevatedButton(
-                            //   onPressed: () {
-                            //     Navigator.push(
-                            //       context,
-                            //       MaterialPageRoute(
-                            //         builder: (context) => DetailDiscussionPage(discussion: snapshot.data![index]),
-                            //       ),
-                            //     );
-                            //   },
-                            //   child: const Text('Detail Comment'),
-                            // ),
-                          ],
+                          );
+                        },
+                        child: Text('Add Comment'),
+                      ),
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: snapshot.data!.length,
+                          itemBuilder: (_, index) => Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                            padding: const EdgeInsets.all(20.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "${snapshot.data![index].fields.title}",
+                                  style: const TextStyle(
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+                                Text("${snapshot.data![index].fields.content}"),
+                                const SizedBox(height: 10),
+                              ],
+                            ),
+                          ),
                         ),
-                      ));
+                      ),
+                    ],
+                  );
                 }
               }
             }));
