@@ -1,13 +1,12 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:readme_mobile/forum_diskusi/pages/create_discussion.dart';
 import 'package:readme_mobile/forum_diskusi/pages/discussion_comment.dart';
 import 'dart:convert';
 
-// import 'package:hanshop/models/item.dart';
-// import 'package:hanshop/widgets/left_drawer.dart';
-
+import '../../dio.dart';
 import '../models/discussion.dart';
-// import 'detail_item.dart';
 
 class DiscussionForumPage extends StatefulWidget {
   // final Book book; // from katalog
@@ -19,10 +18,39 @@ class DiscussionForumPage extends StatefulWidget {
 }
 
 class _DiscussionForumPageState extends State<DiscussionForumPage> {
+  // late Dio dio; //pastiin nambahin ini
+  //
+  // //tambahin ini di bawah code kalian
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   initDio();
+  // }
+  //
+  // void initDio() async {
+  //   dio = await DioClient.dio;
+  //   WidgetsBinding.instance.addPostFrameCallback((_) {
+  //     checkLogin();
+  //   });
+  // }
+  //
+  // void checkLogin() async {
+  //   Response response;
+  //   try {
+  //     response = await dio.get('/protected');
+  //     if (response.statusCode == 200) {
+  //       print(response.data);
+  //     }
+  //   } on DioException catch (e) {
+  //     print(e.response!.data);
+  //   }
+  // }
+
+
   Future<List<Discussion>> fetchProduct() async {
     // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
     //"https://shanahan-danualif-tugas.pbp.cs.ui.ac.id/json/"
-    var url = Uri.parse('http://127.0.0.1:8000/discussions/json-discussions/');
+    var url = Uri.parse('http://127.0.0.1:8000/discussions/json-discussions/'); //belom filter masih localhost
     var response = await http.get(
       url,
       headers: {"Content-Type": "application/json"},
@@ -51,6 +79,7 @@ class _DiscussionForumPageState extends State<DiscussionForumPage> {
         body: FutureBuilder(
             future: fetchProduct(),
             builder: (context, AsyncSnapshot snapshot) {
+
               if (snapshot.data == null) {
                 return const Center(child: CircularProgressIndicator());
               } else {
@@ -66,29 +95,40 @@ class _DiscussionForumPageState extends State<DiscussionForumPage> {
                     ],
                   );
                 } else {
-                  return ListView.builder(
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (_, index) => Container(
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 12),
+                  return Column(
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          // Navigator.push(
+                          //   context,
+                            // MaterialPageRoute(
+                              // builder: (context) => DiscussionForumFormPage(FormPage(discussion: widget.discussion),
+                            // ),
+                          // );
+                        },
+                        child: Text('Add Discussion'),
+                      ),
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: snapshot.data!.length,
+                          itemBuilder: (_, index) => Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                             padding: const EdgeInsets.all(20.0),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "${index + 1}.${snapshot.data![index].fields.title}",
+                                  "${snapshot.data![index].fields.title}",
                                   style: const TextStyle(
                                     fontSize: 18.0,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 const SizedBox(height: 10),
-                                // Text("${snapshot.data![index].fields.amount}"),
-                                // const SizedBox(height: 10),
                                 Text("${snapshot.data![index].fields.content}"),
                                 const SizedBox(height: 10),
-                                // Text("${snapshot.data![index].fields.price}"),
+                                // const SizedBox(height: 10),
                                 ElevatedButton(
                                   onPressed: () {
                                     Navigator.push(
@@ -103,7 +143,11 @@ class _DiscussionForumPageState extends State<DiscussionForumPage> {
                                 ),
                               ],
                             ),
-                          ));
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
                 }
               }
             }));
