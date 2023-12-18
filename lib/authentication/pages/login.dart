@@ -30,6 +30,23 @@ class _LoginPageState extends State<LoginPage> {
 
   void initDio() async {
     dio = await DioClient.dio;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      checkLogin();
+    });
+  }
+
+  void checkLogin() async {
+    Response response;
+    try {
+      response = await dio.get('/protected');
+      if (response.statusCode == 200) {
+        print(response.data);
+      }
+    } on DioException catch (e) {
+      if (e.response!.statusCode == 401) {
+        print(e.response!.data);
+      }
+    }
   }
 
   @override

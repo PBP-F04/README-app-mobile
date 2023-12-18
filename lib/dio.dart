@@ -1,6 +1,8 @@
+import 'package:dio/browser.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:cookie_jar/cookie_jar.dart';
+import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 
 class DioClient {
@@ -8,13 +10,22 @@ class DioClient {
 
   static Future<Dio> get dio async {
     if (_dio == null) {
-      final appDocDir = await getApplicationDocumentsDirectory();
-      final appDocPath = appDocDir.path;
-      final persistCookieJar = PersistCookieJar(
-          ignoreExpires: true, storage: FileStorage("$appDocPath/.cookies/"));
-      _dio = Dio(
-          BaseOptions(baseUrl: "https://readme-app-production.up.railway.app"));
-      _dio!.interceptors.add(CookieManager(persistCookieJar));
+      if (!kIsWeb) {
+        final appDocDir = await getApplicationDocumentsDirectory();
+        final appDocPath = appDocDir.path;
+        final persistCookieJar = PersistCookieJar(
+            ignoreExpires: true, storage: FileStorage("$appDocPath/.cookies/"));
+        _dio = Dio(BaseOptions(
+            baseUrl: "https://readme-app-production.up.railway.app"));
+        _dio!.interceptors.add(CookieManager(persistCookieJar));
+      } else {
+        _dio = DioForBrowser(BaseOptions(
+            baseUrl: "https://readme-app-production.up.railway.app"));
+
+        var adapter = BrowserHttpClientAdapter();
+        adapter.withCredentials = true;
+        _dio!.httpClientAdapter = adapter;
+      }
     }
     return _dio!;
   }
