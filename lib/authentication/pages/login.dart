@@ -285,8 +285,9 @@ class _LoginPageState extends State<LoginPage> {
                                                       Future.delayed(
                                                           const Duration(
                                                               seconds: 2), () {
-                                                        Navigator.pushNamed(
-                                                            context, '/');
+                                                        Navigator
+                                                            .pushReplacementNamed(
+                                                                context, '/');
                                                       });
                                                     }
                                                   } on DioException catch (e) {
