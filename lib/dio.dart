@@ -1,4 +1,3 @@
-import 'package:dio/browser.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:cookie_jar/cookie_jar.dart';
@@ -18,13 +17,6 @@ class DioClient {
         _dio = Dio(BaseOptions(
             baseUrl: "https://readme-app-production.up.railway.app"));
         _dio!.interceptors.add(CookieManager(persistCookieJar));
-      } else {
-        _dio = DioForBrowser(BaseOptions(
-            baseUrl: "https://readme-app-production.up.railway.app"));
-
-        var adapter = BrowserHttpClientAdapter();
-        adapter.withCredentials = true;
-        _dio!.httpClientAdapter = adapter;
       }
     }
     return _dio!;
