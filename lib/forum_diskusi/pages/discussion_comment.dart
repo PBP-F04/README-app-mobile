@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+
 import 'package:readme_mobile/forum_diskusi/models/discussion.dart';
-import 'package:readme_mobile/forum_diskusi/pages/create_comment.dart';
+
+import 'package:readme_mobile/forum_diskusi/widgets/create_comment.dart';
+
 import 'dart:convert';
 
 // import 'package:hanshop/models/item.dart';
@@ -23,9 +26,10 @@ class CommentPage extends StatefulWidget {
 class _CommentPageState extends State<CommentPage> {
   Future<List<Comment>> fetchProduct() async {
     // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
-    //"https://shanahan-danualif-tugas.pbp.cs.ui.ac.id/json/"
+
     var url = Uri.parse(
-        'http://127.0.0.1:8000/discussions/json-comments/${widget.discussion.pk}');
+        // 'http://127.0.0.1:8000/discussions/json-comments/${widget.discussion.pk}');
+        'https://readme-app-production.up.railway.app/discussions/json-comments/${widget.discussion.pk}');
     var response = await http.get(
       url,
       headers: {"Content-Type": "application/json"},
@@ -94,6 +98,13 @@ class _CommentPageState extends State<CommentPage> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                Text(
+                                  "${snapshot.data![index].fields.username}",
+                                  style: const TextStyle(
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                                 Text(
                                   "${snapshot.data![index].fields.title}",
                                   style: const TextStyle(
