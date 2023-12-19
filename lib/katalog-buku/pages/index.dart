@@ -19,6 +19,7 @@ class _HomePageState extends State<HomePage> {
   int _page = 1;
   int _maxPage = 1;
   bool _isLoading = false;
+  bool _isLogin = false;
 
   @override
   void initState() {
@@ -30,6 +31,7 @@ class _HomePageState extends State<HomePage> {
   void initDio() async {
     dio = await DioClient.dio;
     fetchBook();
+    checkLogin();
   }
 
   @override
@@ -73,6 +75,20 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  void checkLogin() async {
+    Response response;
+    try {
+      response = await dio.get('/protected');
+      if (response.statusCode == 200) {
+        setState(() {
+          _isLogin = true;
+        });
+      }
+    } on DioException catch (e) {
+      if (e.response!.statusCode == 401) {}
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -108,10 +124,11 @@ class _HomePageState extends State<HomePage> {
                               _bookList?.data[index].categoryCategoryName ?? "",
                           subject: _bookList?.data[index].subject ?? "",
                           bookCode: _bookList?.data[index].bookCode ?? "",
+                          isLogin: _isLogin,
                         );
                       } else {
                         return const SizedBox();
-// Loading indicator
+// Loading indicato
                       }
                     }),
                   ),

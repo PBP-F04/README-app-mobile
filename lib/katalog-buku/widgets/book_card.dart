@@ -10,16 +10,17 @@ class BookCard extends StatelessWidget {
   final String category;
   final String subject;
   final String bookCode;
+  final bool isLogin;
 
-  const BookCard({
-    super.key,
-    required this.bookId,
-    required this.title,
-    required this.author,
-    required this.category,
-    required this.subject,
-    required this.bookCode,
-  });
+  const BookCard(
+      {super.key,
+      required this.bookId,
+      required this.title,
+      required this.author,
+      required this.category,
+      required this.subject,
+      required this.bookCode,
+      required this.isLogin});
 
   @override
   Widget build(BuildContext context) {
@@ -114,15 +115,21 @@ class BookCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => BookDetailPage(
-                                            bookId: bookId,
-                                            bookCode: bookCode,
-                                          )));
-                            },
+                            onPressed: !isLogin
+                                ? () {
+                                    Navigator.pushReplacementNamed(
+                                        context, '/login');
+                                  }
+                                : () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                BookDetailPage(
+                                                  bookId: bookId,
+                                                  bookCode: bookCode,
+                                                )));
+                                  },
                             style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all<Color>(
                                 Colors.transparent,
