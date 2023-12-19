@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:readme_mobile/katalog-buku/pages/details.dart';
 import 'package:shimmer/shimmer.dart';
 
 class BookCard extends StatelessWidget {
@@ -58,7 +59,8 @@ class BookCard extends StatelessWidget {
                       1.5, // Assuming that the line height is 1.2 times the font size
                   child: Stack(
                     children: [
-                      Center(
+                      Align(
+                        alignment: Alignment.centerLeft,
                         child: Text(
                           title,
                           maxLines: 2,
@@ -112,7 +114,15 @@ class BookCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => BookDetailPage(
+                                            bookId: bookId,
+                                            bookCode: bookCode,
+                                          )));
+                            },
                             style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all<Color>(
                                 Colors.transparent,
