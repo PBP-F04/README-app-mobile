@@ -1,56 +1,35 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:readme_mobile/forum_diskusi/pages/create_discussion.dart';
+import 'package:readme_mobile/forum_diskusi/widgets/create_discussion.dart';
 import 'package:readme_mobile/forum_diskusi/pages/discussion_comment.dart';
 import 'dart:convert';
 
 import '../../dio.dart';
+import '../../katalog-buku/models/book.dart';
 import '../models/discussion.dart';
 
 class DiscussionForumPage extends StatefulWidget {
   // final Book book; // from katalog
+  final String bookId;
 
-  const DiscussionForumPage({Key? key}) : super(key: key);
+  // const DiscussionForumPage({Key? key}) : super(key: key);
+  const DiscussionForumPage({Key? key, required this.bookId})
+      : super(key: key);
 
   @override
   _DiscussionForumPageState createState() => _DiscussionForumPageState();
 }
 
 class _DiscussionForumPageState extends State<DiscussionForumPage> {
-  // late Dio dio; //pastiin nambahin ini
-  //
-  // //tambahin ini di bawah code kalian
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   initDio();
-  // }
-  //
-  // void initDio() async {
-  //   dio = await DioClient.dio;
-  //   WidgetsBinding.instance.addPostFrameCallback((_) {
-  //     checkLogin();
-  //   });
-  // }
-  //
-  // void checkLogin() async {
-  //   Response response;
-  //   try {
-  //     response = await dio.get('/protected');
-  //     if (response.statusCode == 200) {
-  //       print(response.data);
-  //     }
-  //   } on DioException catch (e) {
-  //     print(e.response!.data);
-  //   }
-  // }
-
+  
 
   Future<List<Discussion>> fetchProduct() async {
     // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
     //"https://shanahan-danualif-tugas.pbp.cs.ui.ac.id/json/"
-    var url = Uri.parse('http://127.0.0.1:8000/discussions/json-discussions/'); //belom filter masih localhost
+    // var url = Uri.parse('http://127.0.0.1:8000/discussions/json-discussions/'); //belom filter masih localhost
+    var url = Uri.parse(
+        'https://readme-app-production.up.railway.app/discussions/json-discussions/${widget.bookId}');
     var response = await http.get(
       url,
       headers: {"Content-Type": "application/json"},
@@ -79,7 +58,6 @@ class _DiscussionForumPageState extends State<DiscussionForumPage> {
         body: FutureBuilder(
             future: fetchProduct(),
             builder: (context, AsyncSnapshot snapshot) {
-
               if (snapshot.data == null) {
                 return const Center(child: CircularProgressIndicator());
               } else {
@@ -101,9 +79,9 @@ class _DiscussionForumPageState extends State<DiscussionForumPage> {
                         onPressed: () {
                           // Navigator.push(
                           //   context,
-                            // MaterialPageRoute(
-                              // builder: (context) => DiscussionForumFormPage(FormPage(discussion: widget.discussion),
-                            // ),
+                          // MaterialPageRoute(
+                          // builder: (context) => DiscussionForumFormPage(FormPage(book: widget.bookId),
+                          // ),
                           // );
                         },
                         child: Text('Add Discussion'),
@@ -112,7 +90,8 @@ class _DiscussionForumPageState extends State<DiscussionForumPage> {
                         child: ListView.builder(
                           itemCount: snapshot.data!.length,
                           itemBuilder: (_, index) => Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 12),
                             padding: const EdgeInsets.all(20.0),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
@@ -139,7 +118,38 @@ class _DiscussionForumPageState extends State<DiscussionForumPage> {
                                       ),
                                     );
                                   },
-                                  child: const Text('Detail Discussion'),
+                                  // style
+                                  style: ButtonStyle(
+                                    backgroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                      Colors.indigo,
+                                    ),
+                                    shape: MaterialStateProperty.all<
+                                        RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                    overlayColor:
+                                        MaterialStateColor.resolveWith(
+                                            (states) {
+                                      if (states
+                                          .contains(MaterialState.pressed)) {
+                                        return Theme.of(context)
+                                            .colorScheme
+                                            .primary
+                                            .withOpacity(0.2);
+                                      }
+                                      return Colors.transparent;
+                                    }),
+                                  ),
+                                  child: const Text(
+                                    'See Discussion Comments',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),

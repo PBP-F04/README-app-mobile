@@ -2,28 +2,29 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-// import 'package:hanshop/widgets/left_drawer.dart';
-// import 'package:hanshop/screens/item_list.dart';
-// import 'package:pbp_django_auth/pbp_django_auth.dart';
-import 'package:provider/provider.dart';
 
-import 'package:readme_mobile/forum_diskusi/models/discussion.dart';
+import 'package:readme_mobile/forum_diskusi/models/comments.dart';
+import 'package:readme_mobile/forum_diskusi/pages/discussion_comment.dart';
 
 import '../../dio.dart';
+import '../models/discussion.dart';
 
 // import 'menu.dart';
 
-final List<Discussion> itemList = [];
+final List<Comment> itemList = [];
 
-class DiscussionForumFormPage extends StatefulWidget {
-  const DiscussionForumFormPage({super.key});
+class CommentFormPage extends StatefulWidget {
+  final Discussion discussion;
+  
+  const CommentFormPage({Key? key, required this.discussion}) : super(key: key);
 
   @override
-  State<DiscussionForumFormPage> createState() => _DiscussionForumFormPageState();
+  State<CommentFormPage> createState() => _CommentFormPageState();
 }
 
-class _DiscussionForumFormPageState extends State<DiscussionForumFormPage> {
+class _CommentFormPageState extends State<CommentFormPage> {
   final _formKey = GlobalKey<FormState>();
+
   String _title = "";
   // int _amount = 0;
   // int _price = 0;
@@ -53,10 +54,9 @@ class _DiscussionForumFormPageState extends State<DiscussionForumFormPage> {
         print(response.data);
       }
     } on DioException catch (e) {
-      print(e.response!.data);
+        print(e.response!.data);
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -84,8 +84,8 @@ class _DiscussionForumFormPageState extends State<DiscussionForumFormPage> {
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
                       decoration: InputDecoration(
-                        hintText: "Judul Diskusi",
-                        labelText: "Judul Diskusi",
+                        hintText: "Judul Komen",
+                        labelText: "Judul Komen",
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(5.0),
                         ),
@@ -167,22 +167,19 @@ class _DiscussionForumFormPageState extends State<DiscussionForumFormPage> {
                           if (_formKey.currentState!.validate()) {
                             // Kirim ke Django dan tunggu respons
                             // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
-                            final response = await dio.post(
-                              // pass book id
-                                "discussions/create-discussion-flutter/<str:book_id>", // nanti butuh string
-                                //"https://shanahan-danualif-tugas.pbp.cs.ui.ac.id/create-item-flutter/"
-                                data:{
-                                  'title': _title,
-                                  'content': _content,
-                                });
+                            Response response;
+                            response = await dio.post("/discussions/create-comment-flutter/${widget.discussion.pk}", data: {
+                              'title': _title,
+                              'content': _content,
+                            });
                             if (response.statusCode == 200) {
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(const SnackBar(
-                                content: Text("Produk baru berhasil disimpan!"),
+                                content: Text("Komen baru berhasil dibuat!"),
                               ));
                               Navigator.pushReplacement(
                                 context,
-                                MaterialPageRoute(builder: (context) => DiscussionForumFormPage()),
+                                MaterialPageRoute(builder: (context) => CommentPage(discussion: widget.discussion)),
                               );
                             } else {
                               ScaffoldMessenger.of(context)
@@ -192,7 +189,7 @@ class _DiscussionForumFormPageState extends State<DiscussionForumFormPage> {
                               ));
                             }
                           }
-                          // _formKey.currentState!.reset();
+                          _formKey.currentState!.reset();
                         },
                         child: const Text(
                           "Save",
