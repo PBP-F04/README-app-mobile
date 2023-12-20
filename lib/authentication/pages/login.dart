@@ -41,11 +41,11 @@ class _LoginPageState extends State<LoginPage> {
     try {
       response = await dio.get('/protected');
       if (response.statusCode == 200) {
-        print(response.data);
+        // print(response.data);
       }
     } on DioException catch (e) {
       if (e.response!.statusCode == 401) {
-        print(e.response!.data);
+        // print(e.response!.data);
       }
     }
   }
