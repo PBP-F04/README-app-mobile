@@ -5,11 +5,11 @@ import 'package:readme_mobile/user_profile/models/category.dart';
 import 'package:readme_mobile/user_profile/models/user.dart';
 
 class EditUserProfile extends StatefulWidget {
-  Profile profile;
-  EditUserProfile({super.key, required this.profile});
+  final Profile profile;
+  const EditUserProfile({super.key, required this.profile});
 
   @override
-  _UserProfilePageState createState() => _UserProfilePageState();
+  State<EditUserProfile> createState() => _UserProfilePageState();
 }
 
 class _UserProfilePageState extends State<EditUserProfile> {
@@ -25,10 +25,8 @@ class _UserProfilePageState extends State<EditUserProfile> {
   void initState() {
     super.initState();
     initDio();
-    fetchCategories();
 
     // Make sure to check if widget.profile is not null before accessing its properties
-    print("a");
     _profileImgController =
         TextEditingController(text: widget.profile.fields.profileImage ?? '');
     _usernameController =
@@ -42,12 +40,13 @@ class _UserProfilePageState extends State<EditUserProfile> {
 
   void initDio() async {
     dio = await DioClient.dio;
+    fetchCategories();
   }
 
   Future<void> fetchCategories() async {
-    var url = 'https://readme-app-production.up.railway.app/profile/get-categories/';
+    var url = '/profile/get-categories/';
     try {
-      Response response = await Dio().get(url);
+      Response response = await dio.get(url);
       if (response.statusCode == 200) {
         List<dynamic> categoriesData = response.data;
         List<Categories> categories =
@@ -64,10 +63,7 @@ class _UserProfilePageState extends State<EditUserProfile> {
       }
     } on DioException catch (e) {
       if (e.response != null) {
-        print(e.response!.data);
-      } else {
-        print(e.message);
-      }
+      } else {}
     }
   }
 
@@ -76,6 +72,7 @@ class _UserProfilePageState extends State<EditUserProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: const Text(" Profile")),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -254,14 +251,8 @@ class _UserProfilePageState extends State<EditUserProfile> {
                     });
 
                     Response response = await dio.post(
-                      'https://readme-app-production.up.railway.app/profile/edit-profile-flutter/',
+                      '/profile/edit-profile-flutter/',
                       data: formData,
-                      options: Options(
-                        headers: {
-                          'X-Custom-Email':
-                              emailUser, // Only use headers for metadata, not for content
-                        },
-                      ),
                     );
 
                     if (response.statusCode == 200) {
@@ -279,7 +270,7 @@ class _UserProfilePageState extends State<EditUserProfile> {
                             borderRadius: BorderRadius.circular(20),
                           ),
                         ));
-                      Navigator.pushNamed(context, '/user_profile');
+                      Navigator.pushReplacementNamed(context, '/user_profile');
                     }
                   } on DioException catch (e) {
                     if (e.response!.statusCode == 400) {

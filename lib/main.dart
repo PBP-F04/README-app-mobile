@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
       title: 'README',
       initialRoute: '/',
       routes: {
-        '/': (context) => const HomePage(),
+        '/test': (context) => const HomePage(),
         '/login': (context) => const LoginPage(),
         '/register': (context) => const RegisterPage(),
         '/create_profile': (context) => const CreateUserProfile(),

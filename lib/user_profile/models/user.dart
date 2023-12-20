@@ -1,16 +1,15 @@
+// To parse this JSON data, do
+//
+//     final profile = profileFromJson(jsonString);
+
 import 'dart:convert';
 
-String emailUser = "Axel";
-bool existingProfile = false;
+Profile profileFromJson(String str) => Profile.fromJson(json.decode(str));
 
-List<Profile> profileFromJson(String str) =>
-    List<Profile>.from(json.decode(str).map((x) => Profile.fromJson(x)));
-
-String profileToJson(List<Profile> data) =>
-    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String profileToJson(Profile data) => json.encode(data.toJson());
 
 class Profile {
-  Model model;
+  String model;
   String pk;
   Fields fields;
 
@@ -21,13 +20,13 @@ class Profile {
   });
 
   factory Profile.fromJson(Map<String, dynamic> json) => Profile(
-        model: modelValues.map[json["model"]]!,
+        model: json["model"],
         pk: json["pk"],
         fields: Fields.fromJson(json["fields"]),
       );
 
   Map<String, dynamic> toJson() => {
-        "model": modelValues.reverse[model],
+        "model": model,
         "pk": pk,
         "fields": fields.toJson(),
       };
@@ -67,21 +66,4 @@ class Fields {
         "favorite_category": favoriteCategory,
         "user": user,
       };
-}
-
-enum Model { USER_PROFILE_PROFILE }
-
-final modelValues =
-    EnumValues({"UserProfile.profile": Model.USER_PROFILE_PROFILE});
-
-class EnumValues<T> {
-  Map<String, T> map;
-  late Map<T, String> reverseMap;
-
-  EnumValues(this.map);
-
-  Map<T, String> get reverse {
-    reverseMap = map.map((k, v) => MapEntry(v, k));
-    return reverseMap;
-  }
 }

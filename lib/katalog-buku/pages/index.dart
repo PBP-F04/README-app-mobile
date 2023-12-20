@@ -20,6 +20,7 @@ class _HomePageState extends State<HomePage> {
   int _maxPage = 1;
   bool _isLoading = false;
   bool _isLogin = false;
+  bool _isCreatedProfile = false;
 
   @override
   void initState() {
@@ -83,6 +84,12 @@ class _HomePageState extends State<HomePage> {
         setState(() {
           _isLogin = true;
         });
+
+        if (response.data['exist']) {
+          setState(() {
+            _isCreatedProfile = true;
+          });
+        }
       }
     } on DioException catch (e) {
       if (e.response!.statusCode == 401) {}
@@ -93,7 +100,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Home Page'),
+          title: const Text('Books'),
         ),
         body: SafeArea(
           top: true,
@@ -125,6 +132,7 @@ class _HomePageState extends State<HomePage> {
                           subject: _bookList?.data[index].subject ?? "",
                           bookCode: _bookList?.data[index].bookCode ?? "",
                           isLogin: _isLogin,
+                          isCreatedProfile: _isCreatedProfile,
                         );
                       } else {
                         return const SizedBox();

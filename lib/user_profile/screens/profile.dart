@@ -1,8 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:readme_mobile/dio.dart';
 import 'package:readme_mobile/user_profile/models/user.dart';
 import 'package:readme_mobile/user_profile/screens/edit_form.dart';
+import 'package:shimmer/shimmer.dart';
 
 class UserProfile extends StatefulWidget {
   const UserProfile({Key? key}) : super(key: key);
@@ -13,34 +15,45 @@ class UserProfile extends StatefulWidget {
 
 class _UserProfileState extends State<UserProfile> {
   late Dio dio;
-  Future<Profile>? userProfile;
-  Map<String, String> categoriesMap = {};
+  Profile? _profile;
+  Map<String, String>? _categoriesMap;
 
   @override
   void initState() {
     super.initState();
     initDio();
-    userProfile = fetchProfile();
   }
 
   void initDio() async {
     dio = await DioClient.dio;
+    fetchProfile();
+    fetchCategories();
   }
 
-  Future<Profile> fetchProfile() async {
-    var url = 'https://readme-app-production.up.railway.app/profile/show-profile/$emailUser';
-    Response response = await Dio().get(url);
-    List<dynamic> profileData = response.data;
-    List<Profile> profile =
-        profileData.map((data) => Profile.fromJson(data)).toList();
-    return profile[0];
+  Future<Profile?> fetchProfile() async {
+    var url = '/profile/show-profile';
+    Response response;
+    Profile? profile;
+    try {
+      response = await dio.get(url);
+      if (response.statusCode == 200) {
+        if (mounted) {
+          setState(() {
+            _profile = Profile.fromJson(response.data);
+          });
+        }
+      }
+    } on DioException catch (e) {
+      if (e.response != null) {}
+    }
+    return profile;
   }
 
-  Future<Map<String, String>> fetchCategories() async {
-    var url = 'https://readme-app-production.up.railway.app/profile/get-categories/';
+  void fetchCategories() async {
+    var url = '/profile/get-categories/';
     Map<String, String> tempCategoriesMap = {};
     try {
-      Response response = await Dio().get(url);
+      Response response = await dio.get(url);
       if (response.statusCode == 200) {
         List<dynamic> categoriesData = response.data;
         for (var data in categoriesData) {
@@ -51,149 +64,131 @@ class _UserProfileState extends State<UserProfile> {
       }
     } on DioException catch (e) {
       if (e.response != null) {
-        print(e.response!.data);
-      } else {
-        print(e.message);
-      }
+      } else {}
     }
-    return tempCategoriesMap;
+    if (mounted) {
+      setState(() {
+        _categoriesMap = tempCategoriesMap;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton.extended(
-        heroTag: "uniqueTag3",
-        onPressed: () {
-          if (userProfile != null) {
-            userProfile!.then((profileData) {
-              // Navigate to the edit page with the current profile data
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => EditUserProfile(profile: profileData),
-                ),
-              );
-            }).catchError((error) {
-              // Handle any errors here
-              print('Error fetching profile: $error');
-            });
-          }
-        },
-        elevation: 0,
-        backgroundColor: Colors.blue,
-        label: const Text("Edit Profile"),
-        icon: const Icon(Icons.edit),
-      ),
-      body: FutureBuilder<Profile>(
-        future: userProfile,
-        builder: (context, profileSnapshot) {
-          return FutureBuilder<Map<String, String>>(
-            future: fetchCategories(),
-            builder: (context, categoriesSnapshot) {
-              if (profileSnapshot.connectionState == ConnectionState.done &&
-                  categoriesSnapshot.connectionState == ConnectionState.done) {
-                if (profileSnapshot.hasData && categoriesSnapshot.hasData) {
-                  categoriesMap = categoriesSnapshot.data!;
-                  return buildUserProfile(profileSnapshot.data!, context);
-                } else if (profileSnapshot.hasError ||
-                    categoriesSnapshot.hasError) {
-                  return Text(
-                      'Error: ${profileSnapshot.error ?? categoriesSnapshot.error}');
-                }
-              }
-              // By default, show a loading spinner
-              return const CircularProgressIndicator();
-            },
-          );
-        },
-      ),
-    );
-  }
-
-  Widget buildUserProfile(Profile profile, BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-          flex: 2,
-          child: _TopPortion(profileData: profile),
+    if (_profile == null || _categoriesMap == null) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
         ),
-        Expanded(
-          flex: 3,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                Text(
-                  "@${profile.fields.username}",
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleLarge
-                      ?.copyWith(fontWeight: FontWeight.bold),
+      );
+    } else {
+      return Scaffold(
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: FloatingActionButton.extended(
+          heroTag: "uniqueTag3",
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => EditUserProfile(
+                  profile: _profile!,
                 ),
-                const SizedBox(height: 16),
-                Text(
-                  profile.fields.name,
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleLarge
-                      ?.copyWith(fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    FloatingActionButton.extended(
-                      heroTag: "uniqueTag1",
-                      onPressed: () {},
-                      elevation: 0,
-                      label: const Text("My Books"),
-                      icon: const Icon(Icons.book),
-                    ),
-                    const SizedBox(width: 16.0),
-                    FloatingActionButton.extended(
-                      heroTag: "uniqueTag2",
-                      onPressed: () {},
-                      elevation: 0,
-                      label: const Text("See My Reviews"),
-                      icon: const Icon(Icons.chat),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        categoriesMap[
-                                profile.fields.favoriteCategory.toString()] ??
-                            'Unknown Category',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                        ),
+              ),
+            );
+          },
+          elevation: 0,
+          backgroundColor: Colors.blue,
+          label: const Text("Edit Profile"),
+          icon: const Icon(Icons.edit),
+        ),
+        body: buildUserProfile(_profile!, context, _categoriesMap!),
+      );
+    }
+  }
+}
+
+Widget buildUserProfile(
+    Profile profile, BuildContext context, Map<String, String> categoriesMap) {
+  return Column(
+    children: [
+      Expanded(
+        flex: 2,
+        child: _TopPortion(profileData: profile),
+      ),
+      Expanded(
+        flex: 3,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Text(
+                "@${profile.fields.username}",
+                style: Theme.of(context)
+                    .textTheme
+                    .titleLarge
+                    ?.copyWith(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                profile.fields.name,
+                style: Theme.of(context)
+                    .textTheme
+                    .titleLarge
+                    ?.copyWith(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  FloatingActionButton.extended(
+                    heroTag: "uniqueTag1",
+                    onPressed: () {},
+                    elevation: 0,
+                    label: const Text("My Books"),
+                    icon: const Icon(Icons.book),
+                  ),
+                  const SizedBox(width: 16.0),
+                  FloatingActionButton.extended(
+                    heroTag: "uniqueTag2",
+                    onPressed: () {},
+                    elevation: 0,
+                    label: const Text("See My Reviews"),
+                    icon: const Icon(Icons.chat),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      categoriesMap[
+                              profile.fields.favoriteCategory.toString()] ??
+                          'Unknown Category',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
                       ),
                     ),
-                    Text(
-                      "Favorite Category",
-                      style: Theme.of(context).textTheme.bodySmall,
-                    )
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Column(
-                  children: [Text(profile.fields.description)],
-                )
-              ],
-            ),
+                  ),
+                  Text(
+                    "Favorite Category",
+                    style: Theme.of(context).textTheme.bodySmall,
+                  )
+                ],
+              ),
+              const SizedBox(height: 16),
+              Column(
+                children: [Text(profile.fields.description)],
+              )
+            ],
           ),
         ),
-      ],
-    );
-  }
+      ),
+    ],
+  );
 }
 
 class _TopPortion extends StatelessWidget {
@@ -219,37 +214,57 @@ class _TopPortion extends StatelessWidget {
         ),
         Align(
           alignment: Alignment.bottomCenter,
-          child: SizedBox(
-            width: 150,
-            height: 150,
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: NetworkImage(profileData!.fields.profileImage)),
+          child: profileData != null
+              ? SizedBox(
+                  width: 150,
+                  height: 150,
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      Container(
+                        decoration: const BoxDecoration(
+                          color: Colors.black,
+                          shape: BoxShape.circle,
+                        ),
+                        child: ClipOval(
+                          child: CachedNetworkImage(
+                            imageUrl: profileData!.fields.profileImage,
+                            errorWidget: (context, url, error) => const Icon(
+                              Icons.error,
+                              color: Colors.white,
+                            ),
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => Shimmer.fromColors(
+                              baseColor: Colors.grey[300]!,
+                              highlightColor: Colors.grey[100]!,
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                  color: Colors.black,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: CircleAvatar(
+                          radius: 20,
+                          backgroundColor:
+                              Theme.of(context).scaffoldBackgroundColor,
+                          child: Container(
+                            margin: const EdgeInsets.all(8.0),
+                            decoration: const BoxDecoration(
+                                color: Colors.green, shape: BoxShape.circle),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                Positioned(
-                  bottom: 0,
-                  right: 0,
-                  child: CircleAvatar(
-                    radius: 20,
-                    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                    child: Container(
-                      margin: const EdgeInsets.all(8.0),
-                      decoration: const BoxDecoration(
-                          color: Colors.green, shape: BoxShape.circle),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+                )
+              : const CircularProgressIndicator(),
         )
       ],
     );

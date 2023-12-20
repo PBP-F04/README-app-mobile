@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:readme_mobile/dio.dart';
-import 'package:readme_mobile/user_profile/models/user.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -262,15 +261,6 @@ class _LoginPageState extends State<LoginPage> {
                                                     });
                                                     if (response.statusCode ==
                                                         200) {
-                                                      Map<String, dynamic>
-                                                          responseData =
-                                                          response.data;
-                                                      emailUser = _email!;
-
-                                                      bool existingProfile =
-                                                          responseData[
-                                                                  'exist'] ??
-                                                              false;
                                                       _scaffoldKey.currentState!
                                                           .showSnackBar(
                                                               SnackBar(
@@ -297,10 +287,10 @@ class _LoginPageState extends State<LoginPage> {
                                                               seconds: 2), () {
                                                         Navigator.pushNamed(
                                                             context,
-                                                            existingProfile
-                                                                ? '/user_profile'
+                                                            response.data[
+                                                                    'exist']
+                                                                ? '/'
                                                                 : '/create_profile');
-
                                                       });
                                                     }
                                                   } on DioException catch (e) {

@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:readme_mobile/dio.dart';
 import 'package:readme_mobile/user_profile/models/category.dart';
-import 'package:readme_mobile/user_profile/models/user.dart';
 
 class CreateUserProfile extends StatefulWidget {
   const CreateUserProfile({super.key});
 
   @override
-  _UserProfilePageState createState() => _UserProfilePageState();
+  State<CreateUserProfile> createState() => _UserProfilePageState();
 }
 
 class _UserProfilePageState extends State<CreateUserProfile> {
@@ -20,30 +19,30 @@ class _UserProfilePageState extends State<CreateUserProfile> {
   void initState() {
     super.initState();
     initDio();
-    fetchCategories();
   }
 
   void initDio() async {
     dio = await DioClient.dio;
+    fetchCategories();
   }
 
   Future<void> fetchCategories() async {
-    var url = 'https://readme-app-production.up.railway.app/profile/get-categories/';
     try {
-      Response response = await Dio().get(url);
+      Response response = await dio.get('/profile/get-categories/');
       if (response.statusCode == 200) {
         List<dynamic> categoriesData = response.data;
         List<Categories> categories =
             categoriesData.map((data) => Categories.fromJson(data)).toList();
-
-        setState(() {
-          _categoriesDropdown = categories.map((category) {
-            return DropdownMenuItem(
-              value: category.categoryName,
-              child: Text(category.categoryName),
-            );
-          }).toList();
-        });
+        if (mounted) {
+          setState(() {
+            _categoriesDropdown = categories.map((category) {
+              return DropdownMenuItem(
+                value: category.categoryName,
+                child: Text(category.categoryName),
+              );
+            }).toList();
+          });
+        }
       }
     } on DioException catch (e) {
       if (e.response != null) {
@@ -63,6 +62,7 @@ class _UserProfilePageState extends State<CreateUserProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: const Text("Profile")),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -240,13 +240,8 @@ class _UserProfilePageState extends State<CreateUserProfile> {
                     });
 
                     Response response = await dio.post(
-                      'https://readme-app-production.up.railway.app/profile/create-profile-flutter/',
+                      '/profile/create-profile-flutter/',
                       data: formData,
-                      options: Options(
-                        headers: {
-                          'X-Custom-Email': emailUser,
-                        },
-                      ),
                     );
                     if (response.statusCode == 200) {
                       print("sukses");
@@ -266,6 +261,7 @@ class _UserProfilePageState extends State<CreateUserProfile> {
                       Navigator.pushNamed(context, '/user_profile');
                     }
                   } on DioException catch (e) {
+                    print(e.response!.data);
                     if (e.response!.statusCode == 400) {
                       _formKey.currentState!.validate();
 
