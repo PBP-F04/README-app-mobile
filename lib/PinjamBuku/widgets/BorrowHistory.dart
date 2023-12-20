@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:readme_mobile/review_buku/screens/create_review.dart';
 import '../../dio.dart';
 import 'package:dio/dio.dart';
 
@@ -109,7 +110,15 @@ class CardExample extends StatelessWidget {
               children: <Widget>[
                 TextButton(
                   child: const Text('Review'),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => CreateReview(
+                          book: null,
+                        ),
+                      ),
+                    );
+                  },
                 ),
                 const SizedBox(width: 8),
               ],
