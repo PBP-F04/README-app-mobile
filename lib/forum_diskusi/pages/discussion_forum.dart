@@ -77,14 +77,14 @@ class _DiscussionForumPageState extends State<DiscussionForumPage> {
                     children: [
                       ElevatedButton(
                         onPressed: () {
-                          // Navigator.push(
-                          //   context,
-                          // MaterialPageRoute(
-                          // builder: (context) => DiscussionForumFormPage(FormPage(book: widget.bookId),
-                          // ),
-                          // );
+                          Navigator.push(
+                            context,
+                          MaterialPageRoute(
+                          builder: (context) => DiscussionForumFormPage(bookId: widget.bookId),
+                          ),
+                          );
                         },
-                        child: Text('Add Discussion'),
+                        child: Text('Add New Discussion'),
                       ),
                       Expanded(
                         child: ListView.builder(
@@ -92,11 +92,27 @@ class _DiscussionForumPageState extends State<DiscussionForumPage> {
                           itemBuilder: (_, index) => Container(
                             margin: const EdgeInsets.symmetric(
                                 horizontal: 16, vertical: 12),
+                            decoration: BoxDecoration(
+                              color: Colors.grey[100],
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
                             padding: const EdgeInsets.all(20.0),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                Text(
+                                  "by: ${snapshot.data![index].fields.username}",
+                                  style: const TextStyle(
+                                    // fontSize: 18.0,
+                                    // fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Container(
+                                  height: 1,
+                                  color: Colors.indigo, // Replace with your desired color
+                                ),
+                                const SizedBox(height: 3),
                                 Text(
                                   "${snapshot.data![index].fields.title}",
                                   style: const TextStyle(
@@ -104,9 +120,12 @@ class _DiscussionForumPageState extends State<DiscussionForumPage> {
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                const SizedBox(height: 10),
-                                Text("${snapshot.data![index].fields.content}"),
-                                const SizedBox(height: 10),
+                                const SizedBox(height: 3),
+                                Text("${snapshot.data![index].fields.content}",
+                                style: const TextStyle(
+                                  fontSize: 15.0,
+                                ),),
+                                const SizedBox(height: 3),
                                 // const SizedBox(height: 10),
                                 ElevatedButton(
                                   onPressed: () {

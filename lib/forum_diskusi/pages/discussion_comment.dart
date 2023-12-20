@@ -7,9 +7,6 @@ import 'package:readme_mobile/forum_diskusi/widgets/create_comment.dart';
 
 import 'dart:convert';
 
-// import 'package:hanshop/models/item.dart';
-// import 'package:hanshop/widgets/left_drawer.dart';
-
 import '../models/comments.dart';
 
 // import 'detail_item.dart';
@@ -56,7 +53,6 @@ class _CommentPageState extends State<CommentPage> {
         appBar: AppBar(
           title: const Text('Comment'),
         ),
-        // drawer: const LeftDrawer(),
         body: FutureBuilder(
             future: fetchProduct(),
             builder: (context, AsyncSnapshot snapshot) {
@@ -77,6 +73,18 @@ class _CommentPageState extends State<CommentPage> {
                 } else {
                   return Column(
                     children: [
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                        padding: const EdgeInsets.all(10.0),
+                        child: Text(
+                          '${widget.discussion.fields.title}',
+                          style: TextStyle(
+                            fontSize: 30.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
                       ElevatedButton(
                         onPressed: () {
                           Navigator.push(
@@ -86,7 +94,7 @@ class _CommentPageState extends State<CommentPage> {
                             ),
                           );
                         },
-                        child: Text('Add Comment'),
+                        child: Text('Add New Comment'),
                       ),
                       Expanded(
                         child: ListView.builder(
@@ -94,23 +102,24 @@ class _CommentPageState extends State<CommentPage> {
                           itemBuilder: (_, index) => Container(
                             margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                             padding: const EdgeInsets.all(20.0),
+                            decoration: BoxDecoration(
+                              color: Colors.grey[100], //
+                              borderRadius: BorderRadius.circular(10.0), //
+                            ),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "${snapshot.data![index].fields.username}",
+                                  "by: ${snapshot.data![index].fields.username}",
                                   style: const TextStyle(
-                                    fontSize: 18.0,
-                                    fontWeight: FontWeight.bold,
+                                    // fontSize: 18.0,
+                                    // fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                Text(
-                                  "${snapshot.data![index].fields.title}",
-                                  style: const TextStyle(
-                                    fontSize: 18.0,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                Container(
+                                  height: 1,
+                                  color: Colors.indigo, // Replace with your desired color
                                 ),
                                 const SizedBox(height: 10),
                                 Text("${snapshot.data![index].fields.content}"),

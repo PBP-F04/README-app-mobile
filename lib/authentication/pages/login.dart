@@ -285,9 +285,12 @@ class _LoginPageState extends State<LoginPage> {
                                                       Future.delayed(
                                                           const Duration(
                                                               seconds: 2), () {
-                                                        Navigator
-                                                            .pushReplacementNamed(
-                                                                context, '/');
+                                                        Navigator.pushNamed(
+                                                            context,
+                                                            response.data[
+                                                                    'exist']
+                                                                ? '/'
+                                                                : '/create_profile');
                                                       });
                                                     }
                                                   } on DioException catch (e) {

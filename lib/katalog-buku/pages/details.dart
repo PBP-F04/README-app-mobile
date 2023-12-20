@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:readme_mobile/dio.dart';
+import 'package:readme_mobile/forum_diskusi/pages/discussion_forum.dart';
 import 'package:readme_mobile/katalog-buku/models/book_detail.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -434,6 +435,82 @@ class _BookDetailPageState extends State<BookDetailPage> {
                             ],
                           ),
                   ),
+                  Divider(
+                    thickness: 2,
+                    color: Colors.grey[300],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
+                    child: Center(
+                        child: _bookDetail == null
+                            ? Shimmer.fromColors(
+                                baseColor: Colors.grey[300]!,
+                                highlightColor: Colors.grey[100]!,
+                                child: Container(
+                                  width: double.infinity,
+                                  height: 20,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : SizedBox(
+                                width: 150,
+                                height: 40,
+                                child: AnimatedContainer(
+                                  duration: const Duration(milliseconds: 300),
+                                  decoration: BoxDecoration(
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    DiscussionForumPage(
+                                                      bookId: widget.bookId,
+                                                    )));
+                                      },
+                                      style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateProperty.all<Color>(
+                                          Colors.transparent,
+                                        ),
+                                        foregroundColor:
+                                            MaterialStateProperty.all<Color>(
+                                          Theme.of(context)
+                                              .colorScheme
+                                              .onPrimary,
+                                        ),
+                                        shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
+                                          RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                        ),
+                                        overlayColor:
+                                            MaterialStateColor.resolveWith(
+                                                (states) {
+                                          if (states.contains(
+                                              MaterialState.pressed)) {
+                                            return Theme.of(context)
+                                                .colorScheme
+                                                .primary
+                                                .withOpacity(0.2);
+                                          }
+                                          return Colors.transparent;
+                                        }),
+                                      ),
+                                      child: const Text(
+                                        'Forum Diskusi',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      )),
+                                ))),
+                  )
                 ],
               ),
             ),

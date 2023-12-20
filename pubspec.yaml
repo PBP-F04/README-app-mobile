@@ -91,7 +91,7 @@ flutter:
   # see https://flutter.dev/custom-fonts/#from-packages
 flutter_launcher_icons:
   #  image_path: "assets/images/icon-128x128.png"
-  image_path_android: "assets/icon/android.png"
+  image_path_android: "assets/icon/main.png"
   image_path_ios: "assets/icon/ios.png"
   android: true
   ios: true
