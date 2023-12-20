@@ -300,6 +300,7 @@ class _LoginPageState extends State<LoginPage> {
                                                             existingProfile
                                                                 ? '/user_profile'
                                                                 : '/create_profile');
+
                                                       });
                                                     }
                                                   } on DioException catch (e) {
