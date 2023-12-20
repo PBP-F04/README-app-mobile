@@ -1,5 +1,8 @@
 # readme_mobile
 
+## Link Downloads
+[https://install.appcenter.ms/orgs/pbp/apps/readme/distribution_groups/public](https://install.appcenter.ms/orgs/pbp/apps/readme/distribution_groups/public)
+
 ## Kelompok F04
 
 1. Fikri Budianto - 2206025306
@@ -70,7 +73,7 @@ pengguna yang gemar membaca.
 
 ### 6. Autentikasi
 
-*Modul `Autentikasi` akan dikerjakan secara bersama oleh **Seluruh anggota F04***
+*Modul `Autentikasi` akan dikerjakan secara bersama oleh **Muhammad Haekal Kalipaksi***
 
 Sistem autentikasi utama aplikasi `README` untuk register, login, dan logout.
 
