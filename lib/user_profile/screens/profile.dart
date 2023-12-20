@@ -83,6 +83,22 @@ class _UserProfileState extends State<UserProfile> {
       );
     } else {
       return Scaffold(
+        bottomNavigationBar: BottomNavigationBar(
+          fixedColor: Theme.of(context).colorScheme.primary,
+          currentIndex: 1,
+          onTap: (index) {
+            if (index == 0) {
+              Navigator.pushReplacementNamed(context, '/');
+            }
+          },
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
+          ],
+        ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: FloatingActionButton.extended(
           heroTag: "uniqueTag3",

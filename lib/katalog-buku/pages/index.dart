@@ -50,9 +50,11 @@ class _HomePageState extends State<HomePage> {
 
   void fetchBook() async {
     if (!_isLoading) {
-      setState(() {
-        _isLoading = true;
-      });
+      if (mounted) {
+        setState(() {
+          _isLoading = true;
+        });
+      }
 
       Response response;
       try {
@@ -60,16 +62,18 @@ class _HomePageState extends State<HomePage> {
         response = await dio.get('/books', queryParameters: {
           "page": _page,
         });
-        setState(() {
-          if (_bookList == null) {
-            _bookList = Book.fromJson(response.data);
-          } else {
-            _bookList!.data.addAll(Book.fromJson(response.data).data);
-          }
-          _isLoading = false;
-          _maxPage = _bookList!.pagination.totalPage;
-          _page++;
-        });
+        if (mounted) {
+          setState(() {
+            if (_bookList == null) {
+              _bookList = Book.fromJson(response.data);
+            } else {
+              _bookList!.data.addAll(Book.fromJson(response.data).data);
+            }
+            _isLoading = false;
+            _maxPage = _bookList!.pagination.totalPage;
+            _page++;
+          });
+        }
       } on DioException catch (e) {
         if (e.response?.statusCode == 401) {}
       }
@@ -81,14 +85,18 @@ class _HomePageState extends State<HomePage> {
     try {
       response = await dio.get('/protected');
       if (response.statusCode == 200) {
-        setState(() {
-          _isLogin = true;
-        });
+        if (mounted) {
+          setState(() {
+            _isLogin = true;
+          });
+        }
 
         if (response.data['exist']) {
-          setState(() {
-            _isCreatedProfile = true;
-          });
+          if (mounted) {
+            setState(() {
+              _isCreatedProfile = true;
+            });
+          }
         }
       }
     } on DioException catch (e) {
@@ -101,6 +109,31 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
         appBar: AppBar(
           title: const Text('Books'),
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: 0,
+          onTap: (index) {
+            if (!_isLoading) {
+              if (index == 1) {
+                if (_isLogin) {
+                  if (_isCreatedProfile) {
+                    Navigator.pushReplacementNamed(context, '/user_profile');
+                  } else {
+                    Navigator.popAndPushNamed(context, '/create_profile');
+                  }
+                } else {
+                  Navigator.pushReplacementNamed(context, '/login');
+                }
+              }
+            }
+          },
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
+          ],
         ),
         body: SafeArea(
           top: true,
