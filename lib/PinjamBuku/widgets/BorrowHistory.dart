@@ -1,11 +1,46 @@
 import 'package:flutter/material.dart';
+import '../../dio.dart';
+import 'package:dio/dio.dart';
 
 void main() {
-  runApp(const BorrowHistory());
+  runApp(const BorrowHistoryPage());
 }
 
-class BorrowHistory extends StatelessWidget {
-  const BorrowHistory({Key? key}) : super(key: key);
+class BorrowHistoryPage extends StatefulWidget {
+  const BorrowHistoryPage({Key? key}) : super(key: key);
+
+  @override
+  State<BorrowHistoryPage> createState() => _BorrowHistoryPageState();
+}
+
+class _BorrowHistoryPageState extends State<BorrowHistoryPage> {
+  late Dio dio; //pastiin nambahin ini
+
+  //tambahin ini di bawah code kalian
+  @override
+  void initState() {
+    super.initState();
+    initDio();
+  }
+
+  void initDio() async {
+    dio = await DioClient.dio;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      checkLogin();
+    });
+  }
+
+  void checkLogin() async {
+    Response response;
+    try {
+      response = await dio.get('/read-book/');
+      if (response.statusCode == 200) {
+        print(response.data);
+      }
+    } on DioException catch (e) {
+      print(e.response!.data);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
