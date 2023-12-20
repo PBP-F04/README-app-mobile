@@ -21,7 +21,7 @@ class BorrowHistory extends StatelessWidget {
             color: Colors.white, // Set the text color to white
           ),
         ),
-        backgroundColor: Colors.blue[900],
+        backgroundColor: Color(0x5068A9),
         foregroundColor: Colors.white,
       ),
       body: BookList(),
