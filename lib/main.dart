@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:readme_mobile/authentication/pages/login.dart';
 import 'package:readme_mobile/authentication/pages/register.dart';
+import 'package:readme_mobile/user_profile/screens/form.dart';
+import 'package:readme_mobile/user_profile/screens/profile.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,6 +24,8 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const LoginPage(),
         '/register': (context) => const RegisterPage(),
+        '/create_profile': (context) => const CreateUserProfile(),
+        '/user_profile': (context) => const UserProfile(),
       },
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
