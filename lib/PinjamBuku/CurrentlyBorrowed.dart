@@ -24,6 +24,81 @@ class CurrentlyBorrowed extends StatelessWidget {
         backgroundColor: Colors.blue[900],
         foregroundColor: Colors.white,
       ),
+      body: BookList(),
     ));
   }
+}
+
+class BookList extends StatelessWidget {
+  // Sample data for the list
+  final List<BookData> books = [
+    BookData(
+      title: 'Madilog',
+      subtitle: 'Madilog Tan Malaka : Materialisme Dialektika dan Logika.',
+      imageUrl:
+          'images/9789791683319_Madilog-Tan-Malaka-Materialisme-Dialektika--Logika.jpg',
+    ),
+    // Add more books as needed
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: books.length,
+      itemBuilder: (context, index) {
+        return CardExample(book: books[index]);
+      },
+    );
+  }
+}
+
+class CardExample extends StatelessWidget {
+  final BookData book;
+
+  const CardExample({required this.book, Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Card(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            ListTile(
+              leading: Image.asset(book.imageUrl),
+              title: Text(book.title),
+              subtitle: Text(book.subtitle),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                TextButton(
+                  child: const Text('Baca Buku'),
+                  onPressed: () {},
+                ),
+                const SizedBox(width: 8),
+                TextButton(
+                  child: const Text('Selesai Pinjam'),
+                  onPressed: () {},
+                ),
+                const SizedBox(width: 8),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class BookData {
+  final String title;
+  final String subtitle;
+  final String imageUrl;
+
+  const BookData({
+    required this.title,
+    required this.subtitle,
+    required this.imageUrl,
+  });
 }
