@@ -2,21 +2,22 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-// import 'package:hanshop/widgets/left_drawer.dart';
-// import 'package:hanshop/screens/item_list.dart';
-// import 'package:pbp_django_auth/pbp_django_auth.dart';
-import 'package:provider/provider.dart';
 
 import 'package:readme_mobile/forum_diskusi/models/discussion.dart';
 
 import '../../dio.dart';
+import '../pages/discussion_forum.dart';
 
 // import 'menu.dart';
 
 final List<Discussion> itemList = [];
 
 class DiscussionForumFormPage extends StatefulWidget {
-  const DiscussionForumFormPage({super.key});
+  final String bookId;
+
+  // const DiscussionForumFormPage({super.key});
+  const DiscussionForumFormPage({Key? key, required this.bookId})
+      : super(key: key);
 
   @override
   State<DiscussionForumFormPage> createState() => _DiscussionForumFormPageState();
@@ -25,8 +26,6 @@ class DiscussionForumFormPage extends StatefulWidget {
 class _DiscussionForumFormPageState extends State<DiscussionForumFormPage> {
   final _formKey = GlobalKey<FormState>();
   String _title = "";
-  // int _amount = 0;
-  // int _price = 0;
   String _content = "";
 
   late Dio dio; //pastiin nambahin ini
@@ -60,18 +59,12 @@ class _DiscussionForumFormPageState extends State<DiscussionForumFormPage> {
 
   @override
   Widget build(BuildContext context) {
-    // dari pbp django auth?
-    // final request = context.watch<CookieRequest>();
     return Scaffold(
       appBar: AppBar(
-        title: const Center(
-          child: Text(
-            'Form Tambah Item',
+        title: const Text(
+            'Form Create Discussion',
           ),
         ),
-        backgroundColor: Colors.indigo,
-        foregroundColor: Colors.white,
-      ),
       // TODO: Tambahkan drawer yang sudah dibuat di sini done
       // drawer: const LeftDrawer(),
       body: Form(
@@ -127,33 +120,6 @@ class _DiscussionForumFormPageState extends State<DiscussionForumFormPage> {
                       },
                     ),
                   ),
-                  // Padding(
-                  //   padding: const EdgeInsets.all(8.0),
-                  //   child: TextFormField(
-                  //     decoration: InputDecoration(
-                  //       hintText: "Harga",
-                  //       labelText: "Harga",
-                  //       border: OutlineInputBorder(
-                  //         borderRadius: BorderRadius.circular(5.0),
-                  //       ),
-                  //     ),
-                  //     // TODO: Tambahkan variabel yang sesuai
-                  //     onChanged: (String? value) {
-                  //       setState(() {
-                  //         _price = int.parse(value!);
-                  //       });
-                  //     },
-                  //     validator: (String? value) {
-                  //       if (value == null || value.isEmpty) {
-                  //         return "Harga tidak boleh kosong!";
-                  //       }
-                  //       if (int.tryParse(value) == null) {
-                  //         return "Harga harus berupa angka!";
-                  //       }
-                  //       return null;
-                  //     },
-                  //   ),
-                  // ),
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Padding(
@@ -169,8 +135,7 @@ class _DiscussionForumFormPageState extends State<DiscussionForumFormPage> {
                             // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
                             final response = await dio.post(
                               // pass book id
-                                "discussions/create-discussion-flutter/<str:book_id>", // nanti butuh string
-                                //"https://shanahan-danualif-tugas.pbp.cs.ui.ac.id/create-item-flutter/"
+                                "/discussions/create-discussion-flutter/${widget.bookId}", // nanti butuh string
                                 data:{
                                   'title': _title,
                                   'content': _content,
@@ -178,11 +143,11 @@ class _DiscussionForumFormPageState extends State<DiscussionForumFormPage> {
                             if (response.statusCode == 200) {
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(const SnackBar(
-                                content: Text("Produk baru berhasil disimpan!"),
+                                content: Text("Diskusi berhasil disimpan!"),
                               ));
-                              Navigator.pushReplacement(
+                              Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => DiscussionForumFormPage()),
+                                MaterialPageRoute(builder: (context) => DiscussionForumPage(bookId: widget.bookId)),
                               );
                             } else {
                               ScaffoldMessenger.of(context)
@@ -192,7 +157,7 @@ class _DiscussionForumFormPageState extends State<DiscussionForumFormPage> {
                               ));
                             }
                           }
-                          // _formKey.currentState!.reset();
+                          _formKey.currentState!.reset();
                         },
                         child: const Text(
                           "Save",

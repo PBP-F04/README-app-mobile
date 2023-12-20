@@ -2,10 +2,6 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-// import 'package:hanshop/widgets/left_drawer.dart';
-// import 'package:hanshop/screens/item_list.dart';
-// import 'package:pbp_django_auth/pbp_django_auth.dart';
-import 'package:provider/provider.dart';
 
 import 'package:readme_mobile/forum_diskusi/models/comments.dart';
 import 'package:readme_mobile/forum_diskusi/pages/discussion_comment.dart';
@@ -30,8 +26,6 @@ class _CommentFormPageState extends State<CommentFormPage> {
   final _formKey = GlobalKey<FormState>();
 
   String _title = "";
-  // int _amount = 0;
-  // int _price = 0;
   String _content = "";
 
   late Dio dio; //pastiin nambahin ini
@@ -64,18 +58,12 @@ class _CommentFormPageState extends State<CommentFormPage> {
 
   @override
   Widget build(BuildContext context) {
-    // dari pbp django auth?
-    // final request = context.watch<CookieRequest>();
     return Scaffold(
       appBar: AppBar(
-        title: const Center(
-          child: Text(
-            'Form Tambah Item',
+        title: const Text(
+            'Form Add Comment',
           ),
         ),
-        backgroundColor: Colors.indigo,
-        foregroundColor: Colors.white,
-      ),
       // TODO: Tambahkan drawer yang sudah dibuat di sini done
       // drawer: const LeftDrawer(),
       body: Form(
@@ -84,35 +72,35 @@ class _CommentFormPageState extends State<CommentFormPage> {
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Padding(
+                  //   padding: const EdgeInsets.all(8.0),
+                  //   child: TextFormField(
+                  //     decoration: InputDecoration(
+                  //       hintText: "Judul Komen",
+                  //       labelText: "Judul Komen",
+                  //       border: OutlineInputBorder(
+                  //         borderRadius: BorderRadius.circular(5.0),
+                  //       ),
+                  //     ),
+                  //     onChanged: (String? value) {
+                  //       setState(() {
+                  //         _title = value!;
+                  //       });
+                  //     },
+                  //     validator: (String? value) {
+                  //       if (value == null || value.isEmpty) {
+                  //         return "Judul tidak boleh kosong!";
+                  //       }
+                  //       return null;
+                  //     },
+                  //   ),
+                  // ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
                       decoration: InputDecoration(
-                        hintText: "Judul Komen",
-                        labelText: "Judul Komen",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                        ),
-                      ),
-                      onChanged: (String? value) {
-                        setState(() {
-                          _title = value!;
-                        });
-                      },
-                      validator: (String? value) {
-                        if (value == null || value.isEmpty) {
-                          return "Judul tidak boleh kosong!";
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        hintText: "Content",
-                        labelText: "Content",
+                        hintText: "Komen",
+                        labelText: "Komen",
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(5.0),
                         ),
@@ -131,33 +119,6 @@ class _CommentFormPageState extends State<CommentFormPage> {
                       },
                     ),
                   ),
-                  // Padding(
-                  //   padding: const EdgeInsets.all(8.0),
-                  //   child: TextFormField(
-                  //     decoration: InputDecoration(
-                  //       hintText: "Harga",
-                  //       labelText: "Harga",
-                  //       border: OutlineInputBorder(
-                  //         borderRadius: BorderRadius.circular(5.0),
-                  //       ),
-                  //     ),
-                  //     // TODO: Tambahkan variabel yang sesuai
-                  //     onChanged: (String? value) {
-                  //       setState(() {
-                  //         _price = int.parse(value!);
-                  //       });
-                  //     },
-                  //     validator: (String? value) {
-                  //       if (value == null || value.isEmpty) {
-                  //         return "Harga tidak boleh kosong!";
-                  //       }
-                  //       if (int.tryParse(value) == null) {
-                  //         return "Harga harus berupa angka!";
-                  //       }
-                  //       return null;
-                  //     },
-                  //   ),
-                  // ),
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Padding(
@@ -181,7 +142,7 @@ class _CommentFormPageState extends State<CommentFormPage> {
                                   .showSnackBar(const SnackBar(
                                 content: Text("Komen baru berhasil dibuat!"),
                               ));
-                              Navigator.pushReplacement(
+                              Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (context) => CommentPage(discussion: widget.discussion)),
                               );

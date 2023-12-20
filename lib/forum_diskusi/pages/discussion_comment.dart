@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:readme_mobile/forum_diskusi/models/discussion.dart';
-import 'package:readme_mobile/forum_diskusi/pages/create_comment.dart';
-import 'dart:convert';
 
-// import 'package:hanshop/models/item.dart';
-// import 'package:hanshop/widgets/left_drawer.dart';
+import 'package:readme_mobile/forum_diskusi/models/discussion.dart';
+
+import 'package:readme_mobile/forum_diskusi/widgets/create_comment.dart';
+
+import 'dart:convert';
 
 import '../models/comments.dart';
 
@@ -23,9 +23,10 @@ class CommentPage extends StatefulWidget {
 class _CommentPageState extends State<CommentPage> {
   Future<List<Comment>> fetchProduct() async {
     // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
-    //"https://shanahan-danualif-tugas.pbp.cs.ui.ac.id/json/"
+
     var url = Uri.parse(
-        'http://127.0.0.1:8000/discussions/json-comments/${widget.discussion.pk}');
+        // 'http://127.0.0.1:8000/discussions/json-comments/${widget.discussion.pk}');
+        'https://readme-app-production.up.railway.app/discussions/json-comments/${widget.discussion.pk}');
     var response = await http.get(
       url,
       headers: {"Content-Type": "application/json"},
@@ -52,7 +53,6 @@ class _CommentPageState extends State<CommentPage> {
         appBar: AppBar(
           title: const Text('Comment'),
         ),
-        // drawer: const LeftDrawer(),
         body: FutureBuilder(
             future: fetchProduct(),
             builder: (context, AsyncSnapshot snapshot) {
@@ -73,6 +73,18 @@ class _CommentPageState extends State<CommentPage> {
                 } else {
                   return Column(
                     children: [
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                        padding: const EdgeInsets.all(10.0),
+                        child: Text(
+                          '${widget.discussion.fields.title}',
+                          style: TextStyle(
+                            fontSize: 30.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
                       ElevatedButton(
                         onPressed: () {
                           Navigator.push(
@@ -82,7 +94,7 @@ class _CommentPageState extends State<CommentPage> {
                             ),
                           );
                         },
-                        child: Text('Add Comment'),
+                        child: Text('Add New Comment'),
                       ),
                       Expanded(
                         child: ListView.builder(
@@ -90,16 +102,24 @@ class _CommentPageState extends State<CommentPage> {
                           itemBuilder: (_, index) => Container(
                             margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                             padding: const EdgeInsets.all(20.0),
+                            decoration: BoxDecoration(
+                              color: Colors.grey[100], //
+                              borderRadius: BorderRadius.circular(10.0), //
+                            ),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "${snapshot.data![index].fields.title}",
+                                  "by: ${snapshot.data![index].fields.username}",
                                   style: const TextStyle(
-                                    fontSize: 18.0,
-                                    fontWeight: FontWeight.bold,
+                                    // fontSize: 18.0,
+                                    // fontWeight: FontWeight.bold,
                                   ),
+                                ),
+                                Container(
+                                  height: 1,
+                                  color: Colors.indigo, // Replace with your desired color
                                 ),
                                 const SizedBox(height: 10),
                                 Text("${snapshot.data![index].fields.content}"),
