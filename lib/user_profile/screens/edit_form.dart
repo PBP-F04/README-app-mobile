@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:readme_mobile/dio.dart';
@@ -28,13 +30,12 @@ class _UserProfilePageState extends State<EditUserProfile> {
 
     // Make sure to check if widget.profile is not null before accessing its properties
     _profileImgController =
-        TextEditingController(text: widget.profile.fields.profileImage ?? '');
+        TextEditingController(text: widget.profile.fields.profileImage);
     _usernameController =
-        TextEditingController(text: widget.profile.fields.username ?? '');
-    _nameController =
-        TextEditingController(text: widget.profile.fields.name ?? '');
+        TextEditingController(text: widget.profile.fields.username);
+    _nameController = TextEditingController(text: widget.profile.fields.name);
     _descriptionController =
-        TextEditingController(text: widget.profile.fields.description ?? '');
+        TextEditingController(text: widget.profile.fields.description);
     // Assuming that 'favoriteCategory' is an id and you have a way to convert it to a category name
   }
 
