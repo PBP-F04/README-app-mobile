@@ -509,6 +509,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
                                           fontWeight: FontWeight.bold,
                                         ),
                                       )),
+
                                 ))),
                   )
                 ],
