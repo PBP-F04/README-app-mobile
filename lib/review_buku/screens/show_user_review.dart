@@ -11,9 +11,9 @@ import '../../katalog-buku/models/book.dart';
 import '../models/bookreview.dart';
 
 class ReviewFromUser extends StatefulWidget {
-  @override
+  final String userId;
 
-  const ReviewFromUser({super.key});
+  const ReviewFromUser({super.key, required this.userId});
 
   _ReviewFromUserState createState() => _ReviewFromUserState();
 }
@@ -38,9 +38,8 @@ class _ReviewFromUserState extends State<ReviewFromUser> {
     // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
     //"https://shanahan-danualif-tugas.pbp.cs.ui.ac.id/json/"
     // var url = Uri.parse('http://127.0.0.1:8000/discussions/json-discussions/'); //belom filter masih localhost
-    
     var url = Uri.parse(
-        'https://readme-app-production.up.railway.app/review/get-review-user-json/${TOLONG BETULIN YANG INII GW GANGERTI}/'); 
+        'https://readme-app-production.up.railway.app/review/get-review-user-json/${widget.userId}/'); 
     var response = await http.get(
       url,
       headers: {"Content-Type": "application/json"},

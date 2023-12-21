@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:readme_mobile/dio.dart';
+import 'package:readme_mobile/review_buku/screens/show_user_review.dart';
 import 'package:readme_mobile/user_profile/models/user.dart';
 import 'package:readme_mobile/user_profile/screens/edit_form.dart';
 import 'package:shimmer/shimmer.dart';
@@ -203,7 +204,12 @@ Widget buildUserProfile(
                   const SizedBox(width: 16.0),
                   FloatingActionButton.extended(
                     heroTag: "uniqueTag2",
-                    onPressed: () {},
+                    onPressed: () {Navigator.push(
+                            context,
+                          MaterialPageRoute(
+                          builder: (context) => ReviewFromUser(userId: profile.pk),
+                          ),
+                          );},
                     elevation: 0,
                     label: const Text("See My Reviews"),
                     icon: const Icon(Icons.chat),
