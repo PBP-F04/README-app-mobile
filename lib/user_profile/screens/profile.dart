@@ -30,6 +30,26 @@ class _UserProfileState extends State<UserProfile> {
     fetchCategories();
   }
 
+  void _logout() async {
+    try {
+      // Replace with the actual URL of your Django logout endpoint
+      var logoutUrl = 'https://readme-app-production.up.railway.app/logout/';
+      Response response = await Dio().post(logoutUrl);
+
+      // Check the response status
+      if (response.statusCode == 200) {
+        // Logout successful, navigate to the login screen or perform any desired action
+        Navigator.pushReplacementNamed(context, '/login');
+      } else {
+        // Handle logout failure
+        print('Logout failed. Status code: ${response.statusCode}');
+      }
+    } catch (error) {
+      // Handle Dio errors or other exceptions
+      print('Error during logout: $error');
+    }
+  }
+
   Future<Profile?> fetchProfile() async {
     var url = '/profile/show-profile';
     Response response;
@@ -100,22 +120,39 @@ class _UserProfileState extends State<UserProfile> {
           ],
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: FloatingActionButton.extended(
-          heroTag: "uniqueTag3",
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => EditUserProfile(
-                  profile: _profile!,
-                ),
-              ),
-            );
-          },
-          elevation: 0,
-          backgroundColor: Colors.blue,
-          label: const Text("Edit Profile"),
-          icon: const Icon(Icons.edit),
+        floatingActionButton: Row(
+          mainAxisAlignment:
+              MainAxisAlignment.spaceEvenly, // Center the buttons
+          children: [
+            // Edit Profile Button
+            FloatingActionButton.extended(
+              heroTag: "uniqueTag3",
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EditUserProfile(
+                      profile: _profile!,
+                    ),
+                  ),
+                );
+              },
+              elevation: 0,
+              backgroundColor: Colors.blue,
+              label: const Text("Edit Profile"),
+              icon: const Icon(Icons.edit),
+            ),
+
+            // Logout Button
+            FloatingActionButton.extended(
+              heroTag: "uniqueTag4",
+              onPressed: _logout,
+              elevation: 0,
+              backgroundColor: Colors.red, // Red color for logout button
+              label: const Text("Logout"),
+              icon: const Icon(Icons.exit_to_app), // Icon suggesting logout
+            ),
+          ],
         ),
         body: buildUserProfile(_profile!, context, _categoriesMap!),
       );
