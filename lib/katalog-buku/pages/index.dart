@@ -31,8 +31,18 @@ class _HomePageState extends State<HomePage> {
 
   void initDio() async {
     dio = await DioClient.dio;
-    fetchBook();
-    checkLogin();
+    if (mounted) {
+      setState(() {
+        _isLoading = true;
+      });
+    }
+    await fetchBook();
+    await checkLogin();
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -48,39 +58,30 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  void fetchBook() async {
-    if (!_isLoading) {
+  Future<void> fetchBook() async {
+    Response response;
+    try {
+      if (_page > _maxPage) return;
+      response = await dio.get('/books', queryParameters: {
+        "page": _page,
+      });
       if (mounted) {
         setState(() {
-          _isLoading = true;
+          if (_bookList == null) {
+            _bookList = Book.fromJson(response.data);
+          } else {
+            _bookList!.data.addAll(Book.fromJson(response.data).data);
+          }
+          _maxPage = _bookList!.pagination.totalPage;
+          _page++;
         });
       }
-
-      Response response;
-      try {
-        if (_page > _maxPage) return;
-        response = await dio.get('/books', queryParameters: {
-          "page": _page,
-        });
-        if (mounted) {
-          setState(() {
-            if (_bookList == null) {
-              _bookList = Book.fromJson(response.data);
-            } else {
-              _bookList!.data.addAll(Book.fromJson(response.data).data);
-            }
-            _isLoading = false;
-            _maxPage = _bookList!.pagination.totalPage;
-            _page++;
-          });
-        }
-      } on DioException catch (e) {
-        if (e.response?.statusCode == 401) {}
-      }
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {}
     }
   }
 
-  void checkLogin() async {
+  Future<void> checkLogin() async {
     Response response;
     try {
       response = await dio.get('/protected');
@@ -135,45 +136,49 @@ class _HomePageState extends State<HomePage> {
             BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
           ],
         ),
-        body: SafeArea(
-          top: true,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: _bookList == null
-                ? const Center(child: CircularProgressIndicator())
-                : GridView.builder(
-                    controller: _scrollController,
-                    itemCount: _isLoading
-                        ? _bookList!.data.length + 1
-                        : _bookList!.data.length,
+        body: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : SafeArea(
+                top: true,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: _bookList == null
+                      ? const Center(child: CircularProgressIndicator())
+                      : GridView.builder(
+                          controller: _scrollController,
+                          itemCount: _isLoading
+                              ? _bookList!.data.length + 1
+                              : _bookList!.data.length,
 // Add 1 for the loading indicator
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 4,
-                      crossAxisSpacing: 4,
-                      childAspectRatio: 9 / 16, // Adjust this value as needed
-                    ),
-                    itemBuilder: ((context, index) {
-                      if (index < _bookList!.data.length) {
-                        return BookCard(
-                          bookId: _bookList?.data[index].id ?? "",
-                          title: _bookList?.data[index].title ?? "",
-                          author: _bookList?.data[index].author ?? "",
-                          category:
-                              _bookList?.data[index].categoryCategoryName ?? "",
-                          subject: _bookList?.data[index].subject ?? "",
-                          bookCode: _bookList?.data[index].bookCode ?? "",
-                          isLogin: _isLogin,
-                          isCreatedProfile: _isCreatedProfile,
-                        );
-                      } else {
-                        return const SizedBox();
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            mainAxisSpacing: 4,
+                            crossAxisSpacing: 4,
+                            childAspectRatio:
+                                9 / 16, // Adjust this value as needed
+                          ),
+                          itemBuilder: ((context, index) {
+                            if (index < _bookList!.data.length) {
+                              return BookCard(
+                                bookId: _bookList?.data[index].id ?? "",
+                                title: _bookList?.data[index].title ?? "",
+                                author: _bookList?.data[index].author ?? "",
+                                category: _bookList
+                                        ?.data[index].categoryCategoryName ??
+                                    "",
+                                subject: _bookList?.data[index].subject ?? "",
+                                bookCode: _bookList?.data[index].bookCode ?? "",
+                                isLogin: _isLogin,
+                                isCreatedProfile: _isCreatedProfile,
+                              );
+                            } else {
+                              return const SizedBox();
 // Loading indicato
-                      }
-                    }),
-                  ),
-          ),
-        ));
+                            }
+                          }),
+                        ),
+                ),
+              ));
   }
 }

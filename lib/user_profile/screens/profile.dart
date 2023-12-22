@@ -1,8 +1,11 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:readme_mobile/dio.dart';
 import 'package:readme_mobile/review_buku/screens/show_user_review.dart';
+// import 'package:readme_mobile/review_buku/screens/show_user_review.dart';
 import 'package:readme_mobile/user_profile/models/user.dart';
 import 'package:readme_mobile/user_profile/screens/edit_form.dart';
 import 'package:shimmer/shimmer.dart';
@@ -29,26 +32,6 @@ class _UserProfileState extends State<UserProfile> {
     dio = await DioClient.dio;
     fetchProfile();
     fetchCategories();
-  }
-
-  void _logout() async {
-    try {
-      // Replace with the actual URL of your Django logout endpoint
-      var logoutUrl = 'https://readme-app-production.up.railway.app/logout/';
-      Response response = await Dio().post(logoutUrl);
-
-      // Check the response status
-      if (response.statusCode == 200) {
-        // Logout successful, navigate to the login screen or perform any desired action
-        Navigator.pushReplacementNamed(context, '/login');
-      } else {
-        // Handle logout failure
-        print('Logout failed. Status code: ${response.statusCode}');
-      }
-    } catch (error) {
-      // Handle Dio errors or other exceptions
-      print('Error during logout: $error');
-    }
   }
 
   Future<Profile?> fetchProfile() async {
@@ -147,7 +130,17 @@ class _UserProfileState extends State<UserProfile> {
             // Logout Button
             FloatingActionButton.extended(
               heroTag: "uniqueTag4",
-              onPressed: _logout,
+              onPressed: () async {
+                Response response;
+                try {
+                  response = await dio.get('/cookie-logout/');
+                  if (response.statusCode == 200) {
+                    Navigator.pushReplacementNamed(context, '/');
+                  }
+                } on DioException catch (e) {
+                  if (e.response!.statusCode == 400) {}
+                }
+              },
               elevation: 0,
               backgroundColor: Colors.red, // Red color for logout button
               label: const Text("Logout"),
@@ -204,12 +197,13 @@ Widget buildUserProfile(
                   const SizedBox(width: 16.0),
                   FloatingActionButton.extended(
                     heroTag: "uniqueTag2",
-                    onPressed: () {Navigator.push(
-                            context,
-                          MaterialPageRoute(
-                          builder: (context) => ReviewFromUser(userId: profile.pk),
-                          ),
-                          );},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const ReviewFromUser()),
+                      );
+                    },
                     elevation: 0,
                     label: const Text("See My Reviews"),
                     icon: const Icon(Icons.chat),

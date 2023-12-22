@@ -1,23 +1,22 @@
 // To parse this JSON data, do
 //
-//     final bookReview = bookReviewFromJson(jsonString);
+//     final bookReviewUser = bookReviewUserFromJson(jsonString);
 
 import 'dart:convert';
-import 'dart:ffi';
 
-BookReview bookReviewFromJson(String str) =>
-    BookReview.fromJson(json.decode(str));
+BookReviewUser bookReviewUserFromJson(String str) =>
+    BookReviewUser.fromJson(json.decode(str));
 
-String bookReviewToJson(BookReview data) => json.encode(data.toJson());
+String bookReviewUserToJson(BookReviewUser data) => json.encode(data.toJson());
 
-class BookReview {
+class BookReviewUser {
   List<Review> reviews;
 
-  BookReview({
+  BookReviewUser({
     required this.reviews,
   });
 
-  factory BookReview.fromJson(Map<String, dynamic> json) => BookReview(
+  factory BookReviewUser.fromJson(Map<String, dynamic> json) => BookReviewUser(
         reviews:
             List<Review>.from(json["reviews"].map((x) => Review.fromJson(x))),
       );
@@ -29,14 +28,14 @@ class BookReview {
 
 class Review {
   String id;
-  String user;
+  String judulBuku;
   double reviewScore;
   String reviewContent;
   DateTime createdAt;
 
   Review({
     required this.id,
-    required this.user,
+    required this.judulBuku,
     required this.reviewScore,
     required this.reviewContent,
     required this.createdAt,
@@ -44,7 +43,7 @@ class Review {
 
   factory Review.fromJson(Map<String, dynamic> json) => Review(
         id: json["id"],
-        user: json["user"],
+        judulBuku: json["judul_buku"],
         reviewScore: json["review_score"],
         reviewContent: json["review_content"],
         createdAt: DateTime.parse(json["created_at"]),
@@ -52,7 +51,7 @@ class Review {
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "user": user,
+        "judul_buku": judulBuku,
         "review_score": reviewScore,
         "review_content": reviewContent,
         "created_at": createdAt.toIso8601String(),
