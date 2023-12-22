@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:readme_mobile/dio.dart';
 import 'package:readme_mobile/forum_diskusi/pages/discussion_forum.dart';
 import 'package:readme_mobile/katalog-buku/models/book_detail.dart';
+import 'package:readme_mobile/review_buku/screens/create_review.dart';
+import 'package:readme_mobile/review_buku/screens/show_book_review.dart';
 import 'package:shimmer/shimmer.dart';
 
 class BookDetailPage extends StatefulWidget {
@@ -36,10 +38,10 @@ class _BookDetailPageState extends State<BookDetailPage> {
 
   void initDio() async {
     dio = await DioClient.dio;
-    fetchBookData();
+    await fetchBookData();
   }
 
-  void fetchBookData() async {
+  Future<void> fetchBookData() async {
     if (!_isLoading) {
       setState(() {
         _isLoading = true;
@@ -505,6 +507,149 @@ class _BookDetailPageState extends State<BookDetailPage> {
                                       ),
                                       child: const Text(
                                         'Forum Diskusi',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      )),
+                                ))),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
+                    child: Center(
+                        child: _bookDetail == null
+                            ? Shimmer.fromColors(
+                                baseColor: Colors.grey[300]!,
+                                highlightColor: Colors.grey[100]!,
+                                child: Container(
+                                  width: double.infinity,
+                                  height: 20,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : SizedBox(
+                                width: 150,
+                                height: 40,
+                                child: AnimatedContainer(
+                                  duration: const Duration(milliseconds: 300),
+                                  decoration: BoxDecoration(
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ReviewFromBook(
+                                                        bookId:
+                                                            widget.bookId)));
+                                      },
+                                      style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateProperty.all<Color>(
+                                          Colors.transparent,
+                                        ),
+                                        foregroundColor:
+                                            MaterialStateProperty.all<Color>(
+                                          Theme.of(context)
+                                              .colorScheme
+                                              .onPrimary,
+                                        ),
+                                        shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
+                                          RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                        ),
+                                        overlayColor:
+                                            MaterialStateColor.resolveWith(
+                                                (states) {
+                                          if (states.contains(
+                                              MaterialState.pressed)) {
+                                            return Theme.of(context)
+                                                .colorScheme
+                                                .primary
+                                                .withOpacity(0.2);
+                                          }
+                                          return Colors.transparent;
+                                        }),
+                                      ),
+                                      child: const Text(
+                                        'Review Buku',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      )),
+                                ))),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
+                    child: Center(
+                        child: _bookDetail == null
+                            ? Shimmer.fromColors(
+                                baseColor: Colors.grey[300]!,
+                                highlightColor: Colors.grey[100]!,
+                                child: Container(
+                                  width: double.infinity,
+                                  height: 20,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : SizedBox(
+                                width: 150,
+                                height: 40,
+                                child: AnimatedContainer(
+                                  duration: const Duration(milliseconds: 300),
+                                  decoration: BoxDecoration(
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    CreateReview(
+                                                        book: _bookDetail!)));
+                                      },
+                                      style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateProperty.all<Color>(
+                                          Colors.transparent,
+                                        ),
+                                        foregroundColor:
+                                            MaterialStateProperty.all<Color>(
+                                          Theme.of(context)
+                                              .colorScheme
+                                              .onPrimary,
+                                        ),
+                                        shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
+                                          RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                        ),
+                                        overlayColor:
+                                            MaterialStateColor.resolveWith(
+                                                (states) {
+                                          if (states.contains(
+                                              MaterialState.pressed)) {
+                                            return Theme.of(context)
+                                                .colorScheme
+                                                .primary
+                                                .withOpacity(0.2);
+                                          }
+                                          return Colors.transparent;
+                                        }),
+                                      ),
+                                      child: const Text(
+                                        'Beri Review',
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                         ),

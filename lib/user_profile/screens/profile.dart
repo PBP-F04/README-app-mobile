@@ -1,7 +1,11 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:readme_mobile/dio.dart';
+import 'package:readme_mobile/review_buku/screens/show_user_review.dart';
+// import 'package:readme_mobile/review_buku/screens/show_user_review.dart';
 import 'package:readme_mobile/user_profile/models/user.dart';
 import 'package:readme_mobile/user_profile/screens/edit_form.dart';
 import 'package:shimmer/shimmer.dart';
@@ -100,22 +104,49 @@ class _UserProfileState extends State<UserProfile> {
           ],
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: FloatingActionButton.extended(
-          heroTag: "uniqueTag3",
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => EditUserProfile(
-                  profile: _profile!,
-                ),
-              ),
-            );
-          },
-          elevation: 0,
-          backgroundColor: Colors.blue,
-          label: const Text("Edit Profile"),
-          icon: const Icon(Icons.edit),
+        floatingActionButton: Row(
+          mainAxisAlignment:
+              MainAxisAlignment.spaceEvenly, // Center the buttons
+          children: [
+            // Edit Profile Button
+            FloatingActionButton.extended(
+              heroTag: "uniqueTag3",
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EditUserProfile(
+                      profile: _profile!,
+                    ),
+                  ),
+                );
+              },
+              elevation: 0,
+              backgroundColor: Colors.blue,
+              label: const Text("Edit Profile"),
+              icon: const Icon(Icons.edit),
+            ),
+
+            // Logout Button
+            FloatingActionButton.extended(
+              heroTag: "uniqueTag4",
+              onPressed: () async {
+                Response response;
+                try {
+                  response = await dio.get('/cookie-logout/');
+                  if (response.statusCode == 200) {
+                    Navigator.pushReplacementNamed(context, '/');
+                  }
+                } on DioException catch (e) {
+                  if (e.response!.statusCode == 400) {}
+                }
+              },
+              elevation: 0,
+              backgroundColor: Colors.red, // Red color for logout button
+              label: const Text("Logout"),
+              icon: const Icon(Icons.exit_to_app), // Icon suggesting logout
+            ),
+          ],
         ),
         body: buildUserProfile(_profile!, context, _categoriesMap!),
       );
@@ -166,7 +197,13 @@ Widget buildUserProfile(
                   const SizedBox(width: 16.0),
                   FloatingActionButton.extended(
                     heroTag: "uniqueTag2",
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const ReviewFromUser()),
+                      );
+                    },
                     elevation: 0,
                     label: const Text("See My Reviews"),
                     icon: const Icon(Icons.chat),
