@@ -19,7 +19,7 @@ class _ReviewFromUserState extends State<ReviewFromUser> {
 
   void initDio() async {
     dio = await DioClient.dio;
-    fetchReviews();
+    await fetchReviews();
   }
 
   @override
@@ -28,7 +28,7 @@ class _ReviewFromUserState extends State<ReviewFromUser> {
     initDio();
   }
 
-  void fetchReviews() async {
+  Future<void> fetchReviews() async {
     if (!_isLoading) {
       try {
         if (mounted) {
@@ -37,7 +37,7 @@ class _ReviewFromUserState extends State<ReviewFromUser> {
           });
         }
         Response response =
-            await dio.post('/review/show_page_review_user_ajax/');
+            await dio.post('/review/show-page-review-user-ajax/');
         if (response.statusCode == 200) {
           if (mounted) {
             setState(() {
